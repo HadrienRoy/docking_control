@@ -4,8 +4,7 @@ void DockingController::docking_state_manager()
 {
     if (docking_state == "start")
     {
-        turtlebot_stop();
-        set_docking_state("searching");
+        start_state_func();
     }
 
     if (docking_state == "searching")
@@ -30,6 +29,21 @@ void DockingController::docking_state_manager()
 }
 
 /*** Docking State Functions ***/
+void DockingController::start_state_func()
+{
+    // Stop Turtlebot
+    turtlebot_stop();
+
+    // Call Queue Update Server to add new robot to queue 
+    // and get docking instructions
+    queue_update_client("add_new_robot");
+
+    // After response is valid
+    // move to specified location
+
+    set_docking_state("searching");
+}
+
 void DockingController::searching_state_func()
 {
     if (!ready_tag_pose)
@@ -72,10 +86,11 @@ void DockingController::approach_state_func()
 {
     if (!ready_turtle_pose)
     {
+        RCLCPP_INFO(get_logger(), "Turtle Pose not ready");
         return;
     }
 
-    // RCLCPP_INFO(get_logger(), "approach_distance goal: %f", distance(approach_goal_pose));
+    RCLCPP_INFO(get_logger(), "approach_distance goal: %f", distance(approach_goal_pose));
 
     if (distance(approach_goal_pose) >= approach_distance_tolerance)
     {
@@ -284,6 +299,8 @@ int main(int argc, char **argv)
     rclcpp::Rate rate(30.0);
 
     node->set_docking_state("");
+
+    node->queue_update_client("add_new_robot");
 
     while (rclcpp::ok())
     {

@@ -1,0 +1,19 @@
+[0.079s] Invoking command in '/home/ubuntu/colcon_ws/src/build/docking_controller': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ubuntu/colcon_ws/install/my_apriltag:/home/ubuntu/turtlebot3_ws/install/turtlebot3_teleop:/home/ubuntu/turtlebot3_ws/install/turtlebot3_example:/opt/ros/foxy /usr/bin/cmake --build /home/ubuntu/colcon_ws/src/build/docking_controller -- -j4 -l4
+[0.312s] [35m[1mScanning dependencies of target docking_controller[0m
+[0.436s] [ 33%] Built target docking_client
+[0.537s] [ 50%] [32mBuilding CXX object CMakeFiles/docking_controller.dir/src/controller.cpp.o[0m
+[0.539s] [ 66%] [32mBuilding CXX object CMakeFiles/docking_controller.dir/src/queue_update_client.cpp.o[0m
+[0.542s] [ 83%] [32mBuilding CXX object CMakeFiles/docking_controller.dir/src/docking_server.cpp.o[0m
+[8.808s] [01m[K/home/ubuntu/colcon_ws/src/my_docking_control/docking_controller/src/controller.cpp:[m[K In function ‘[01m[Kint main(int, char**)[m[K’:
+[8.811s] [01m[K/home/ubuntu/colcon_ws/src/my_docking_control/docking_controller/src/controller.cpp:304:46:[m[K [01;31m[Kerror: [m[K‘[01m[Kvoid DockingController::queue_update_client(std::string)[m[K’ is private within this context
+[8.812s]   304 |     node->queue_update_client("add_new_robot"[01;31m[K)[m[K;
+[8.813s]       |                                              [01;31m[K^[m[K
+[8.813s] In file included from [01m[K/home/ubuntu/colcon_ws/src/my_docking_control/docking_controller/src/controller.cpp:1[m[K:
+[8.814s] [01m[K/home/ubuntu/colcon_ws/src/my_docking_control/docking_controller/include/controller.hpp:185:10:[m[K [01;36m[Knote: [m[Kdeclared private here
+[8.815s]   185 |     void [01;36m[Kqueue_update_client[m[K(std::string type);
+[8.816s]       |          [01;36m[K^~~~~~~~~~~~~~~~~~~[m[K
+[19.320s] make[2]: *** [CMakeFiles/docking_controller.dir/build.make:63: CMakeFiles/docking_controller.dir/src/controller.cpp.o] Error 1
+[19.320s] make[2]: *** Waiting for unfinished jobs....
+[20.175s] make[1]: *** [CMakeFiles/Makefile2:107: CMakeFiles/docking_controller.dir/all] Error 2
+[20.175s] make: *** [Makefile:141: all] Error 2
+[20.182s] Invoked command in '/home/ubuntu/colcon_ws/src/build/docking_controller' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ubuntu/colcon_ws/install/my_apriltag:/home/ubuntu/turtlebot3_ws/install/turtlebot3_teleop:/home/ubuntu/turtlebot3_ws/install/turtlebot3_example:/opt/ros/foxy /usr/bin/cmake --build /home/ubuntu/colcon_ws/src/build/docking_controller -- -j4 -l4

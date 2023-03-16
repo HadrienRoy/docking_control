@@ -1,0 +1,5 @@
+[35m[1mScanning dependencies of target docking_controller[0m
+[ 33%] Built target docking_client
+[ 50%] [32mBuilding CXX object CMakeFiles/docking_controller.dir/src/controller.cpp.o[0m
+[ 66%] [32mBuilding CXX object CMakeFiles/docking_controller.dir/src/queue_update_client.cpp.o[0m
+[ 83%] [32mBuilding CXX object CMakeFiles/docking_controller.dir/src/docking_server.cpp.o[0m

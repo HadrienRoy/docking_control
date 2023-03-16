@@ -1,0 +1,27 @@
+[35m[1mScanning dependencies of target docking_controller[0m
+[ 33%] Built target docking_client
+[ 50%] [32mBuilding CXX object CMakeFiles/docking_controller.dir/src/controller.cpp.o[0m
+[ 66%] [32mBuilding CXX object CMakeFiles/docking_controller.dir/src/docking_server.cpp.o[0m
+[ 83%] [32mBuilding CXX object CMakeFiles/docking_controller.dir/src/queue_update_client.cpp.o[0m
+[100%] [32m[1mLinking CXX executable docking_controller[0m
+[100%] Built target docking_controller
+-- Install configuration: ""
+-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/lib/docking_controller/docking_controller
+-- Set runtime path of "/home/ubuntu/colcon_ws/src/install/docking_controller/lib/docking_controller/docking_controller" to ""
+-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/lib/docking_controller/docking_client
+-- Set runtime path of "/home/ubuntu/colcon_ws/src/install/docking_controller/lib/docking_controller/docking_client" to ""
+-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/ament_index/resource_index/package_run_dependencies/docking_controller
+-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/ament_index/resource_index/parent_prefix_path/docking_controller
+-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/environment/ament_prefix_path.sh
+-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/environment/ament_prefix_path.dsv
+-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/environment/path.sh
+-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/environment/path.dsv
+-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/local_setup.bash
+-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/local_setup.sh
+-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/local_setup.zsh
+-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/local_setup.dsv
+-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/package.dsv
+-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/ament_index/resource_index/packages/docking_controller
+-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/cmake/docking_controllerConfig.cmake
+-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/cmake/docking_controllerConfig-version.cmake
+-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/package.xml

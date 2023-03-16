@@ -6,6 +6,8 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
 
+    ROBOT_ID = os.environ['ROBOT_ID']
+
     ld = LaunchDescription()
 
     detect_tag_pupil = Node(
@@ -17,7 +19,10 @@ def generate_launch_description():
     docking_controller = Node(
         package="docking_controller",
         executable="docking_controller",
-        name="docking_controller"
+        name="docking_controller",
+        parameters=[
+            {"robot_id": ROBOT_ID},
+        ]
     )
 
     docking_client = Node(

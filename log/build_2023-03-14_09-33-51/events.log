@@ -1,0 +1,390 @@
+[0.000000] (-) TimerEvent: {}
+[0.000964] (-) JobUnselected: {'identifier': 'docking_interfaces'}
+[0.001265] (-) JobUnselected: {'identifier': 'my_apriltag'}
+[0.001963] (-) JobUnselected: {'identifier': 'my_robot_bringup'}
+[0.002560] (-) JobUnselected: {'identifier': 'my_robot_interfaces'}
+[0.003548] (docking_controller) JobQueued: {'identifier': 'docking_controller', 'dependencies': OrderedDict([('docking_interfaces', '/home/ubuntu/colcon_ws/src/install/docking_interfaces')])}
+[0.003768] (docking_controller) JobStarted: {'identifier': 'docking_controller'}
+[0.073935] (docking_controller) JobProgress: {'identifier': 'docking_controller', 'progress': 'cmake'}
+[0.076818] (docking_controller) JobProgress: {'identifier': 'docking_controller', 'progress': 'build'}
+[0.079532] (docking_controller) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/ubuntu/colcon_ws/src/build/docking_controller', '--', '-j4', '-l4'], 'cwd': '/home/ubuntu/colcon_ws/src/build/docking_controller', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'ubuntu'), ('SSH_CLIENT', '192.168.11.5 50988 22'), ('LC_TIME', 'fr_FR.UTF-8'), ('XDG_SESSION_TYPE', 'tty'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/ubuntu/colcon_ws/install/my_robot_interfaces/lib:/home/ubuntu/colcon_ws/install/docking_interfaces/lib:/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/aarch64-linux-gnu:/opt/ros/foxy/lib'), ('MOTD_SHOWN', 'pam'), ('HOME', '/home/ubuntu'), ('OLDPWD', '/home/ubuntu/colcon_ws'), ('SSH_TTY', '/dev/pts/1'), ('ROS_PYTHON_VERSION', '3'), ('LC_MONETARY', 'fr_FR.UTF-8'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLCON_PREFIX_PATH', '/home/ubuntu/colcon_ws/install:/home/ubuntu/turtlebot3_ws/install'), ('ROS_DISTRO', 'foxy'), ('LOGNAME', 'ubuntu'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('TERM', 'xterm-256color'), ('XDG_SESSION_ID', '14'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/home/ubuntu/.local/bin:/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin'), ('LC_ADDRESS', 'fr_FR.UTF-8'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('DISPLAY', 'localhost:10.0'), ('LANG', 'en_US.UTF-8'), ('LC_TELEPHONE', 'fr_FR.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('ROS_DOMAIN_ID', '12'), ('AMENT_PREFIX_PATH', '/home/ubuntu/colcon_ws/install/my_robot_bringup:/home/ubuntu/colcon_ws/install/my_apriltag:/home/ubuntu/colcon_ws/install/my_robot_interfaces:/home/ubuntu/colcon_ws/install/docking_controller:/home/ubuntu/colcon_ws/install/docking_interfaces:/home/ubuntu/turtlebot3_ws/install/turtlebot3:/home/ubuntu/turtlebot3_ws/install/turtlebot3_teleop:/home/ubuntu/turtlebot3_ws/install/turtlebot3_bringup:/home/ubuntu/turtlebot3_ws/install/turtlebot3_node:/home/ubuntu/turtlebot3_ws/install/turtlebot3_example:/home/ubuntu/turtlebot3_ws/install/turtlebot3_description:/home/ubuntu/turtlebot3_ws/install/ld08_driver:/opt/ros/foxy'), ('SHELL', '/bin/bash'), ('LC_NAME', 'fr_FR.UTF-8'), ('ROBOT_ID', '1'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('LC_MEASUREMENT', 'fr_FR.UTF-8'), ('LC_IDENTIFICATION', 'fr_FR.UTF-8'), ('PWD', '/home/ubuntu/colcon_ws/src/build/docking_controller'), ('OPENCR_PORT', '/dev/ttyACM0'), ('TURTLEBOT3_MODEL', 'waffle_pi'), ('LC_ALL', 'en_US.UTF-8'), ('SSH_CONNECTION', '192.168.11.5 50988 192.168.11.9 22'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('LDS_MODEL', 'LDS-02'), ('PYTHONPATH', '/home/ubuntu/colcon_ws/build/my_apriltag:/home/ubuntu/colcon_ws/install/my_apriltag/lib/python3.8/site-packages:/home/ubuntu/colcon_ws/install/my_robot_interfaces/lib/python3.8/site-packages:/home/ubuntu/colcon_ws/install/docking_interfaces/lib/python3.8/site-packages:/home/ubuntu/turtlebot3_ws/build/turtlebot3_teleop:/home/ubuntu/turtlebot3_ws/install/turtlebot3_teleop/lib/python3.8/site-packages:/home/ubuntu/turtlebot3_ws/build/turtlebot3_example:/home/ubuntu/turtlebot3_ws/install/turtlebot3_example/lib/python3.8/site-packages:/opt/ros/foxy/lib/python3.8/site-packages'), ('LC_NUMERIC', 'fr_FR.UTF-8'), ('LC_PAPER', 'fr_FR.UTF-8'), ('COLCON', '1'), ('CMAKE_PREFIX_PATH', '/home/ubuntu/colcon_ws/install/my_robot_bringup:/home/ubuntu/colcon_ws/install/my_robot_interfaces:/home/ubuntu/colcon_ws/install/docking_controller:/home/ubuntu/colcon_ws/install/docking_interfaces:/home/ubuntu/turtlebot3_ws/install/turtlebot3:/home/ubuntu/turtlebot3_ws/install/turtlebot3_bringup:/home/ubuntu/turtlebot3_ws/install/turtlebot3_node:/home/ubuntu/turtlebot3_ws/install/turtlebot3_description:/home/ubuntu/turtlebot3_ws/install/ld08_driver:/home/ubuntu/colcon_ws/install/my_apriltag:/home/ubuntu/turtlebot3_ws/install/turtlebot3_teleop:/home/ubuntu/turtlebot3_ws/install/turtlebot3_example:/opt/ros/foxy'), ('OPENCR_MODEL', 'waffle')]), 'shell': False}
+[0.099551] (-) TimerEvent: {}
+[0.201154] (-) TimerEvent: {}
+[0.301886] (-) TimerEvent: {}
+[0.311602] (docking_controller) StdoutLine: {'line': b'\x1b[35m\x1b[1mScanning dependencies of target docking_controller\x1b[0m\n'}
+[0.402093] (-) TimerEvent: {}
+[0.445605] (docking_controller) StdoutLine: {'line': b'[ 33%] Built target docking_client\n'}
+[0.502288] (-) TimerEvent: {}
+[0.559563] (docking_controller) StdoutLine: {'line': b'[ 50%] \x1b[32mBuilding CXX object CMakeFiles/docking_controller.dir/src/controller.cpp.o\x1b[0m\n'}
+[0.562700] (docking_controller) StdoutLine: {'line': b'[ 66%] \x1b[32mBuilding CXX object CMakeFiles/docking_controller.dir/src/docking_server.cpp.o\x1b[0m\n'}
+[0.564659] (docking_controller) StdoutLine: {'line': b'[ 83%] \x1b[32mBuilding CXX object CMakeFiles/docking_controller.dir/src/queue_update_client.cpp.o\x1b[0m\n'}
+[0.602604] (-) TimerEvent: {}
+[0.703812] (-) TimerEvent: {}
+[0.805165] (-) TimerEvent: {}
+[0.906973] (-) TimerEvent: {}
+[1.010511] (-) TimerEvent: {}
+[1.111957] (-) TimerEvent: {}
+[1.213372] (-) TimerEvent: {}
+[1.314869] (-) TimerEvent: {}
+[1.416835] (-) TimerEvent: {}
+[1.518780] (-) TimerEvent: {}
+[1.620556] (-) TimerEvent: {}
+[1.722379] (-) TimerEvent: {}
+[1.824287] (-) TimerEvent: {}
+[1.926204] (-) TimerEvent: {}
+[2.036709] (-) TimerEvent: {}
+[2.138440] (-) TimerEvent: {}
+[2.240644] (-) TimerEvent: {}
+[2.342939] (-) TimerEvent: {}
+[2.444907] (-) TimerEvent: {}
+[2.547323] (-) TimerEvent: {}
+[2.649234] (-) TimerEvent: {}
+[2.751537] (-) TimerEvent: {}
+[2.853593] (-) TimerEvent: {}
+[2.955819] (-) TimerEvent: {}
+[3.057942] (-) TimerEvent: {}
+[3.160080] (-) TimerEvent: {}
+[3.262354] (-) TimerEvent: {}
+[3.364489] (-) TimerEvent: {}
+[3.466307] (-) TimerEvent: {}
+[3.567967] (-) TimerEvent: {}
+[3.669726] (-) TimerEvent: {}
+[3.771503] (-) TimerEvent: {}
+[3.873297] (-) TimerEvent: {}
+[3.975085] (-) TimerEvent: {}
+[4.076776] (-) TimerEvent: {}
+[4.178487] (-) TimerEvent: {}
+[4.280222] (-) TimerEvent: {}
+[4.381974] (-) TimerEvent: {}
+[4.483848] (-) TimerEvent: {}
+[4.585538] (-) TimerEvent: {}
+[4.687301] (-) TimerEvent: {}
+[4.789012] (-) TimerEvent: {}
+[4.890899] (-) TimerEvent: {}
+[4.992775] (-) TimerEvent: {}
+[5.094502] (-) TimerEvent: {}
+[5.196267] (-) TimerEvent: {}
+[5.297940] (-) TimerEvent: {}
+[5.399861] (-) TimerEvent: {}
+[5.501572] (-) TimerEvent: {}
+[5.603297] (-) TimerEvent: {}
+[5.705071] (-) TimerEvent: {}
+[5.806801] (-) TimerEvent: {}
+[5.908484] (-) TimerEvent: {}
+[6.010297] (-) TimerEvent: {}
+[6.111972] (-) TimerEvent: {}
+[6.214013] (-) TimerEvent: {}
+[6.315935] (-) TimerEvent: {}
+[6.417753] (-) TimerEvent: {}
+[6.519511] (-) TimerEvent: {}
+[6.621242] (-) TimerEvent: {}
+[6.723011] (-) TimerEvent: {}
+[6.824715] (-) TimerEvent: {}
+[6.926486] (-) TimerEvent: {}
+[7.032827] (-) TimerEvent: {}
+[7.134641] (-) TimerEvent: {}
+[7.236257] (-) TimerEvent: {}
+[7.338023] (-) TimerEvent: {}
+[7.439890] (-) TimerEvent: {}
+[7.541556] (-) TimerEvent: {}
+[7.643568] (-) TimerEvent: {}
+[7.745321] (-) TimerEvent: {}
+[7.847104] (-) TimerEvent: {}
+[7.948858] (-) TimerEvent: {}
+[8.050777] (-) TimerEvent: {}
+[8.152609] (-) TimerEvent: {}
+[8.254339] (-) TimerEvent: {}
+[8.356077] (-) TimerEvent: {}
+[8.457692] (-) TimerEvent: {}
+[8.559580] (-) TimerEvent: {}
+[8.661376] (-) TimerEvent: {}
+[8.763245] (-) TimerEvent: {}
+[8.865015] (-) TimerEvent: {}
+[8.966872] (-) TimerEvent: {}
+[9.068676] (-) TimerEvent: {}
+[9.170424] (-) TimerEvent: {}
+[9.272256] (-) TimerEvent: {}
+[9.374204] (-) TimerEvent: {}
+[9.476200] (-) TimerEvent: {}
+[9.578058] (-) TimerEvent: {}
+[9.680071] (-) TimerEvent: {}
+[9.783260] (-) TimerEvent: {}
+[9.885721] (-) TimerEvent: {}
+[9.987998] (-) TimerEvent: {}
+[10.089871] (-) TimerEvent: {}
+[10.191832] (-) TimerEvent: {}
+[10.293935] (-) TimerEvent: {}
+[10.396083] (-) TimerEvent: {}
+[10.497851] (-) TimerEvent: {}
+[10.599796] (-) TimerEvent: {}
+[10.701636] (-) TimerEvent: {}
+[10.803994] (-) TimerEvent: {}
+[10.905887] (-) TimerEvent: {}
+[11.007683] (-) TimerEvent: {}
+[11.109495] (-) TimerEvent: {}
+[11.211393] (-) TimerEvent: {}
+[11.313307] (-) TimerEvent: {}
+[11.415142] (-) TimerEvent: {}
+[11.516914] (-) TimerEvent: {}
+[11.618799] (-) TimerEvent: {}
+[11.720686] (-) TimerEvent: {}
+[11.822582] (-) TimerEvent: {}
+[11.924334] (-) TimerEvent: {}
+[12.026122] (-) TimerEvent: {}
+[12.130589] (-) TimerEvent: {}
+[12.232427] (-) TimerEvent: {}
+[12.333855] (-) TimerEvent: {}
+[12.435356] (-) TimerEvent: {}
+[12.537213] (-) TimerEvent: {}
+[12.639057] (-) TimerEvent: {}
+[12.740823] (-) TimerEvent: {}
+[12.842699] (-) TimerEvent: {}
+[12.944476] (-) TimerEvent: {}
+[13.046296] (-) TimerEvent: {}
+[13.148118] (-) TimerEvent: {}
+[13.249910] (-) TimerEvent: {}
+[13.351959] (-) TimerEvent: {}
+[13.453780] (-) TimerEvent: {}
+[13.555616] (-) TimerEvent: {}
+[13.657416] (-) TimerEvent: {}
+[13.759231] (-) TimerEvent: {}
+[13.861045] (-) TimerEvent: {}
+[13.962863] (-) TimerEvent: {}
+[14.064613] (-) TimerEvent: {}
+[14.166418] (-) TimerEvent: {}
+[14.268207] (-) TimerEvent: {}
+[14.369966] (-) TimerEvent: {}
+[14.471367] (-) TimerEvent: {}
+[14.572735] (-) TimerEvent: {}
+[14.674188] (-) TimerEvent: {}
+[14.775564] (-) TimerEvent: {}
+[14.876944] (-) TimerEvent: {}
+[14.978770] (-) TimerEvent: {}
+[15.080162] (-) TimerEvent: {}
+[15.182068] (-) TimerEvent: {}
+[15.283938] (-) TimerEvent: {}
+[15.385810] (-) TimerEvent: {}
+[15.487678] (-) TimerEvent: {}
+[15.588624] (-) TimerEvent: {}
+[15.690504] (-) TimerEvent: {}
+[15.792298] (-) TimerEvent: {}
+[15.893898] (-) TimerEvent: {}
+[15.995773] (-) TimerEvent: {}
+[16.097500] (-) TimerEvent: {}
+[16.199224] (-) TimerEvent: {}
+[16.300605] (-) TimerEvent: {}
+[16.402314] (-) TimerEvent: {}
+[16.504222] (-) TimerEvent: {}
+[16.607326] (-) TimerEvent: {}
+[16.709193] (-) TimerEvent: {}
+[16.811584] (-) TimerEvent: {}
+[16.912693] (-) TimerEvent: {}
+[17.013568] (-) TimerEvent: {}
+[17.114439] (-) TimerEvent: {}
+[17.215489] (-) TimerEvent: {}
+[17.316516] (-) TimerEvent: {}
+[17.417449] (-) TimerEvent: {}
+[17.518520] (-) TimerEvent: {}
+[17.619538] (-) TimerEvent: {}
+[17.720475] (-) TimerEvent: {}
+[17.821340] (-) TimerEvent: {}
+[17.922290] (-) TimerEvent: {}
+[18.023388] (-) TimerEvent: {}
+[18.124860] (-) TimerEvent: {}
+[18.225817] (-) TimerEvent: {}
+[18.326699] (-) TimerEvent: {}
+[18.427572] (-) TimerEvent: {}
+[18.528470] (-) TimerEvent: {}
+[18.629354] (-) TimerEvent: {}
+[18.730252] (-) TimerEvent: {}
+[18.831062] (-) TimerEvent: {}
+[18.931883] (-) TimerEvent: {}
+[19.032726] (-) TimerEvent: {}
+[19.133650] (-) TimerEvent: {}
+[19.234562] (-) TimerEvent: {}
+[19.335538] (-) TimerEvent: {}
+[19.436472] (-) TimerEvent: {}
+[19.537341] (-) TimerEvent: {}
+[19.638287] (-) TimerEvent: {}
+[19.739194] (-) TimerEvent: {}
+[19.840149] (-) TimerEvent: {}
+[19.941169] (-) TimerEvent: {}
+[20.042070] (-) TimerEvent: {}
+[20.143021] (-) TimerEvent: {}
+[20.243931] (-) TimerEvent: {}
+[20.345377] (-) TimerEvent: {}
+[20.446214] (-) TimerEvent: {}
+[20.547065] (-) TimerEvent: {}
+[20.648017] (-) TimerEvent: {}
+[20.749025] (-) TimerEvent: {}
+[20.849946] (-) TimerEvent: {}
+[20.950773] (-) TimerEvent: {}
+[21.051543] (-) TimerEvent: {}
+[21.152304] (-) TimerEvent: {}
+[21.253091] (-) TimerEvent: {}
+[21.353849] (-) TimerEvent: {}
+[21.454624] (-) TimerEvent: {}
+[21.555367] (-) TimerEvent: {}
+[21.656093] (-) TimerEvent: {}
+[21.756879] (-) TimerEvent: {}
+[21.857633] (-) TimerEvent: {}
+[21.958410] (-) TimerEvent: {}
+[22.059167] (-) TimerEvent: {}
+[22.159930] (-) TimerEvent: {}
+[22.260695] (-) TimerEvent: {}
+[22.423079] (-) TimerEvent: {}
+[22.523843] (-) TimerEvent: {}
+[22.624601] (-) TimerEvent: {}
+[22.725411] (-) TimerEvent: {}
+[22.826200] (-) TimerEvent: {}
+[22.926950] (-) TimerEvent: {}
+[23.027767] (-) TimerEvent: {}
+[23.128513] (-) TimerEvent: {}
+[23.229276] (-) TimerEvent: {}
+[23.330066] (-) TimerEvent: {}
+[23.430881] (-) TimerEvent: {}
+[23.531638] (-) TimerEvent: {}
+[23.632393] (-) TimerEvent: {}
+[23.733129] (-) TimerEvent: {}
+[23.833916] (-) TimerEvent: {}
+[23.934671] (-) TimerEvent: {}
+[24.035415] (-) TimerEvent: {}
+[24.136137] (-) TimerEvent: {}
+[24.236871] (-) TimerEvent: {}
+[24.337611] (-) TimerEvent: {}
+[24.438368] (-) TimerEvent: {}
+[24.539103] (-) TimerEvent: {}
+[24.639836] (-) TimerEvent: {}
+[24.740569] (-) TimerEvent: {}
+[24.841312] (-) TimerEvent: {}
+[24.942055] (-) TimerEvent: {}
+[25.042840] (-) TimerEvent: {}
+[25.143562] (-) TimerEvent: {}
+[25.244286] (-) TimerEvent: {}
+[25.345034] (-) TimerEvent: {}
+[25.445774] (-) TimerEvent: {}
+[25.546549] (-) TimerEvent: {}
+[25.647264] (-) TimerEvent: {}
+[25.748027] (-) TimerEvent: {}
+[25.848776] (-) TimerEvent: {}
+[25.949525] (-) TimerEvent: {}
+[26.050284] (-) TimerEvent: {}
+[26.151016] (-) TimerEvent: {}
+[26.251755] (-) TimerEvent: {}
+[26.352489] (-) TimerEvent: {}
+[26.453224] (-) TimerEvent: {}
+[26.553979] (-) TimerEvent: {}
+[26.654762] (-) TimerEvent: {}
+[26.755493] (-) TimerEvent: {}
+[26.856219] (-) TimerEvent: {}
+[26.956958] (-) TimerEvent: {}
+[27.057746] (-) TimerEvent: {}
+[27.158504] (-) TimerEvent: {}
+[27.259246] (-) TimerEvent: {}
+[27.360008] (-) TimerEvent: {}
+[27.460754] (-) TimerEvent: {}
+[27.561495] (-) TimerEvent: {}
+[27.662267] (-) TimerEvent: {}
+[27.762993] (-) TimerEvent: {}
+[27.863737] (-) TimerEvent: {}
+[27.964470] (-) TimerEvent: {}
+[28.065190] (-) TimerEvent: {}
+[28.165921] (-) TimerEvent: {}
+[28.266683] (-) TimerEvent: {}
+[28.367366] (-) TimerEvent: {}
+[28.468078] (-) TimerEvent: {}
+[28.568808] (-) TimerEvent: {}
+[28.669542] (-) TimerEvent: {}
+[28.770313] (-) TimerEvent: {}
+[28.871028] (-) TimerEvent: {}
+[28.971762] (-) TimerEvent: {}
+[29.072516] (-) TimerEvent: {}
+[29.173255] (-) TimerEvent: {}
+[29.273986] (-) TimerEvent: {}
+[29.374728] (-) TimerEvent: {}
+[29.475456] (-) TimerEvent: {}
+[29.576181] (-) TimerEvent: {}
+[29.676906] (-) TimerEvent: {}
+[29.777674] (-) TimerEvent: {}
+[29.878427] (-) TimerEvent: {}
+[29.979134] (-) TimerEvent: {}
+[30.079873] (-) TimerEvent: {}
+[30.180573] (-) TimerEvent: {}
+[30.281263] (-) TimerEvent: {}
+[30.381872] (-) TimerEvent: {}
+[30.482477] (-) TimerEvent: {}
+[30.583141] (-) TimerEvent: {}
+[30.684067] (-) TimerEvent: {}
+[30.785263] (-) TimerEvent: {}
+[30.886096] (-) TimerEvent: {}
+[30.986868] (-) TimerEvent: {}
+[31.087664] (-) TimerEvent: {}
+[31.188426] (-) TimerEvent: {}
+[31.289154] (-) TimerEvent: {}
+[31.389922] (-) TimerEvent: {}
+[31.490713] (-) TimerEvent: {}
+[31.591463] (-) TimerEvent: {}
+[31.692231] (-) TimerEvent: {}
+[31.792986] (-) TimerEvent: {}
+[31.893784] (-) TimerEvent: {}
+[31.994563] (-) TimerEvent: {}
+[32.095336] (-) TimerEvent: {}
+[32.196193] (-) TimerEvent: {}
+[32.297268] (-) TimerEvent: {}
+[33.188545] (-) TimerEvent: {}
+[33.244943] (docking_controller) StdoutLine: {'line': b'[100%] \x1b[32m\x1b[1mLinking CXX executable docking_controller\x1b[0m\n'}
+[33.288728] (-) TimerEvent: {}
+[33.389640] (-) TimerEvent: {}
+[33.490784] (-) TimerEvent: {}
+[33.591508] (-) TimerEvent: {}
+[33.692394] (-) TimerEvent: {}
+[33.793331] (-) TimerEvent: {}
+[33.894335] (-) TimerEvent: {}
+[33.995525] (-) TimerEvent: {}
+[34.096511] (-) TimerEvent: {}
+[34.197879] (-) TimerEvent: {}
+[34.299139] (-) TimerEvent: {}
+[34.400268] (-) TimerEvent: {}
+[34.501098] (-) TimerEvent: {}
+[34.601852] (-) TimerEvent: {}
+[34.702538] (-) TimerEvent: {}
+[34.803251] (-) TimerEvent: {}
+[34.904284] (-) TimerEvent: {}
+[35.005082] (-) TimerEvent: {}
+[35.105844] (-) TimerEvent: {}
+[35.206534] (-) TimerEvent: {}
+[35.302555] (docking_controller) StdoutLine: {'line': b'[100%] Built target docking_controller\n'}
+[35.306696] (-) TimerEvent: {}
+[35.396343] (docking_controller) CommandEnded: {'returncode': 0}
+[35.407152] (-) TimerEvent: {}
+[35.508790] (-) TimerEvent: {}
+[35.566024] (docking_controller) JobProgress: {'identifier': 'docking_controller', 'progress': 'install'}
+[35.609121] (-) TimerEvent: {}
+[35.616761] (docking_controller) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/ubuntu/colcon_ws/src/build/docking_controller'], 'cwd': '/home/ubuntu/colcon_ws/src/build/docking_controller', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'ubuntu'), ('SSH_CLIENT', '192.168.11.5 50988 22'), ('LC_TIME', 'fr_FR.UTF-8'), ('XDG_SESSION_TYPE', 'tty'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/ubuntu/colcon_ws/install/my_robot_interfaces/lib:/home/ubuntu/colcon_ws/install/docking_interfaces/lib:/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/aarch64-linux-gnu:/opt/ros/foxy/lib'), ('MOTD_SHOWN', 'pam'), ('HOME', '/home/ubuntu'), ('OLDPWD', '/home/ubuntu/colcon_ws'), ('SSH_TTY', '/dev/pts/1'), ('ROS_PYTHON_VERSION', '3'), ('LC_MONETARY', 'fr_FR.UTF-8'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLCON_PREFIX_PATH', '/home/ubuntu/colcon_ws/install:/home/ubuntu/turtlebot3_ws/install'), ('ROS_DISTRO', 'foxy'), ('LOGNAME', 'ubuntu'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('TERM', 'xterm-256color'), ('XDG_SESSION_ID', '14'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/home/ubuntu/.local/bin:/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin'), ('LC_ADDRESS', 'fr_FR.UTF-8'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('DISPLAY', 'localhost:10.0'), ('LANG', 'en_US.UTF-8'), ('LC_TELEPHONE', 'fr_FR.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('ROS_DOMAIN_ID', '12'), ('AMENT_PREFIX_PATH', '/home/ubuntu/colcon_ws/install/my_robot_bringup:/home/ubuntu/colcon_ws/install/my_apriltag:/home/ubuntu/colcon_ws/install/my_robot_interfaces:/home/ubuntu/colcon_ws/install/docking_controller:/home/ubuntu/colcon_ws/install/docking_interfaces:/home/ubuntu/turtlebot3_ws/install/turtlebot3:/home/ubuntu/turtlebot3_ws/install/turtlebot3_teleop:/home/ubuntu/turtlebot3_ws/install/turtlebot3_bringup:/home/ubuntu/turtlebot3_ws/install/turtlebot3_node:/home/ubuntu/turtlebot3_ws/install/turtlebot3_example:/home/ubuntu/turtlebot3_ws/install/turtlebot3_description:/home/ubuntu/turtlebot3_ws/install/ld08_driver:/opt/ros/foxy'), ('SHELL', '/bin/bash'), ('LC_NAME', 'fr_FR.UTF-8'), ('ROBOT_ID', '1'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('LC_MEASUREMENT', 'fr_FR.UTF-8'), ('LC_IDENTIFICATION', 'fr_FR.UTF-8'), ('PWD', '/home/ubuntu/colcon_ws/src/build/docking_controller'), ('OPENCR_PORT', '/dev/ttyACM0'), ('TURTLEBOT3_MODEL', 'waffle_pi'), ('LC_ALL', 'en_US.UTF-8'), ('SSH_CONNECTION', '192.168.11.5 50988 192.168.11.9 22'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('LDS_MODEL', 'LDS-02'), ('PYTHONPATH', '/home/ubuntu/colcon_ws/build/my_apriltag:/home/ubuntu/colcon_ws/install/my_apriltag/lib/python3.8/site-packages:/home/ubuntu/colcon_ws/install/my_robot_interfaces/lib/python3.8/site-packages:/home/ubuntu/colcon_ws/install/docking_interfaces/lib/python3.8/site-packages:/home/ubuntu/turtlebot3_ws/build/turtlebot3_teleop:/home/ubuntu/turtlebot3_ws/install/turtlebot3_teleop/lib/python3.8/site-packages:/home/ubuntu/turtlebot3_ws/build/turtlebot3_example:/home/ubuntu/turtlebot3_ws/install/turtlebot3_example/lib/python3.8/site-packages:/opt/ros/foxy/lib/python3.8/site-packages'), ('LC_NUMERIC', 'fr_FR.UTF-8'), ('LC_PAPER', 'fr_FR.UTF-8'), ('COLCON', '1'), ('CMAKE_PREFIX_PATH', '/home/ubuntu/colcon_ws/install/my_robot_bringup:/home/ubuntu/colcon_ws/install/my_robot_interfaces:/home/ubuntu/colcon_ws/install/docking_controller:/home/ubuntu/colcon_ws/install/docking_interfaces:/home/ubuntu/turtlebot3_ws/install/turtlebot3:/home/ubuntu/turtlebot3_ws/install/turtlebot3_bringup:/home/ubuntu/turtlebot3_ws/install/turtlebot3_node:/home/ubuntu/turtlebot3_ws/install/turtlebot3_description:/home/ubuntu/turtlebot3_ws/install/ld08_driver:/home/ubuntu/colcon_ws/install/my_apriltag:/home/ubuntu/turtlebot3_ws/install/turtlebot3_teleop:/home/ubuntu/turtlebot3_ws/install/turtlebot3_example:/opt/ros/foxy'), ('OPENCR_MODEL', 'waffle')]), 'shell': False}
+[35.655744] (docking_controller) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[35.656551] (docking_controller) StdoutLine: {'line': b'-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/lib/docking_controller/docking_controller\n'}
+[35.677113] (docking_controller) StdoutLine: {'line': b'-- Set runtime path of "/home/ubuntu/colcon_ws/src/install/docking_controller/lib/docking_controller/docking_controller" to ""\n'}
+[35.677769] (docking_controller) StdoutLine: {'line': b'-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/lib/docking_controller/docking_client\n'}
+[35.702937] (docking_controller) StdoutLine: {'line': b'-- Set runtime path of "/home/ubuntu/colcon_ws/src/install/docking_controller/lib/docking_controller/docking_client" to ""\n'}
+[35.703771] (docking_controller) StdoutLine: {'line': b'-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/ament_index/resource_index/package_run_dependencies/docking_controller\n'}
+[35.706105] (docking_controller) StdoutLine: {'line': b'-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/ament_index/resource_index/parent_prefix_path/docking_controller\n'}
+[35.708125] (docking_controller) StdoutLine: {'line': b'-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/environment/ament_prefix_path.sh\n'}
+[35.709191] (-) TimerEvent: {}
+[35.710645] (docking_controller) StdoutLine: {'line': b'-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/environment/ament_prefix_path.dsv\n'}
+[35.713108] (docking_controller) StdoutLine: {'line': b'-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/environment/path.sh\n'}
+[35.715449] (docking_controller) StdoutLine: {'line': b'-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/environment/path.dsv\n'}
+[35.717849] (docking_controller) StdoutLine: {'line': b'-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/local_setup.bash\n'}
+[35.719566] (docking_controller) StdoutLine: {'line': b'-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/local_setup.sh\n'}
+[35.721199] (docking_controller) StdoutLine: {'line': b'-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/local_setup.zsh\n'}
+[35.722898] (docking_controller) StdoutLine: {'line': b'-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/local_setup.dsv\n'}
+[35.724488] (docking_controller) StdoutLine: {'line': b'-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/package.dsv\n'}
+[35.726562] (docking_controller) StdoutLine: {'line': b'-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/ament_index/resource_index/packages/docking_controller\n'}
+[35.727941] (docking_controller) StdoutLine: {'line': b'-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/cmake/docking_controllerConfig.cmake\n'}
+[35.729406] (docking_controller) StdoutLine: {'line': b'-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/cmake/docking_controllerConfig-version.cmake\n'}
+[35.731115] (docking_controller) StdoutLine: {'line': b'-- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/package.xml\n'}
+[35.737196] (docking_controller) CommandEnded: {'returncode': 0}
+[35.809362] (-) TimerEvent: {}
+[35.910207] (-) TimerEvent: {}
+[36.012089] (-) TimerEvent: {}
+[36.040334] (docking_controller) JobEnded: {'identifier': 'docking_controller', 'rc': 0}
+[36.043197] (-) EventReactorShutdown: {}

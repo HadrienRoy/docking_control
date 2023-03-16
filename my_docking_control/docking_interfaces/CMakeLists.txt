@@ -23,6 +23,7 @@ set(srv_files
   "srv/Docking.srv"
   "srv/StartAprilTagDetection.srv"
   "srv/GazeboChargeBattery.srv"
+  "srv/QueueUpdate.srv"
 )
 
 rosidl_generate_interfaces(${PROJECT_NAME}

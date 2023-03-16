@@ -12,6 +12,7 @@
 #include "docking_interfaces/msg/current_state.hpp"
 #include "docking_interfaces/srv/docking.hpp"
 #include "docking_interfaces/srv/gazebo_charge_battery.hpp"
+#include "docking_interfaces/srv/queue_update.hpp"
 
 #include "nav_msgs/msg/odometry.hpp"
 
@@ -19,8 +20,6 @@
 #include "tf2/LinearMath/Matrix3x3.h"
 #include "tf2/LinearMath/Vector3.h"
 #include "tf2/LinearMath/Transform.h"
-
-
 
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
@@ -46,14 +45,21 @@ public:
         /*** Declare Parameters ***/
         this->declare_parameter<double>("vel_linear", 0.1);
         this->get_parameter("vel_linear", vel_linear);
+
         this->declare_parameter<double>("vel_angular", 0.2);
         this->get_parameter("vel_angular", vel_angular);
+
         this->declare_parameter<double>("approach_distance_tolerance", 0.1);
         this->get_parameter("approach_distance_tolerance", approach_distance_tolerance);
+
         this->declare_parameter<double>("final_approach_distance_tolerance", 0.1);
         this->get_parameter("final_approach_distance_tolerance", final_approach_distance_tolerance);
+
         this->declare_parameter<double>("angle_tolerance", 0.02);
         this->get_parameter("angle_tolerance", angle_tolerance);
+
+        this->declare_parameter<std::string>("robot_id", "0");
+        this->get_parameter("robot_id",robot_id);
 
         /*** Define Publishers & Services ***/
         vel_publisher = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
@@ -76,6 +82,8 @@ public:
             1s, std::bind(&DockingController::on_tf_timer, this));
 
         RCLCPP_INFO(this->get_logger(), "Docking Controller has been started.");
+        RCLCPP_INFO(this->get_logger(), "Robot ID: %s", robot_id.c_str());
+
     }
 
     void set_docking_state(std::string new_docking_state);
@@ -111,6 +119,8 @@ private:
     double approach_distance_tolerance;
     double final_approach_distance_tolerance;
     double angle_tolerance;
+
+    std::string robot_id;
 
     // PID
     double kp = 0.5;
@@ -151,6 +161,7 @@ private:
     void turtlebot_forward(double velocity);
 
     // State Functions
+    void start_state_func();
     void searching_state_func();
     void approach_state_func();
     void final_approach_state_func();
@@ -170,6 +181,8 @@ private:
     void docking_server(
         const std::shared_ptr<docking_interfaces::srv::Docking::Request> request,
         const std::shared_ptr<docking_interfaces::srv::Docking::Response> response);
+
+    void queue_update_client(std::string type);
 
     /*** Define Callback Functions ***/
     void callbackTagPose(const geometry_msgs::msg::Pose::SharedPtr msg)

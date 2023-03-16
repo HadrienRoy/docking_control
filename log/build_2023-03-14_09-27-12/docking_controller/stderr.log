@@ -1,0 +1,11 @@
+[01m[K/home/ubuntu/colcon_ws/src/my_docking_control/docking_controller/src/controller.cpp:[m[K In function ‘[01m[Kint main(int, char**)[m[K’:
+[01m[K/home/ubuntu/colcon_ws/src/my_docking_control/docking_controller/src/controller.cpp:304:5:[m[K [01;31m[Kerror: [m[K‘[01m[Kqueue_update_client[m[K’ was not declared in this scope
+  304 |     [01;31m[Kqueue_update_client[m[K("add_new_robot");
+      |     [01;31m[K^~~~~~~~~~~~~~~~~~~[m[K
+make[2]: *** [CMakeFiles/docking_client.dir/build.make:63: CMakeFiles/docking_client.dir/src/docking_client.cpp.o] Interrupt
+make[2]: *** [CMakeFiles/docking_controller.dir/build.make:76: CMakeFiles/docking_controller.dir/src/docking_server.cpp.o] Interrupt
+make[2]: *** [CMakeFiles/docking_controller.dir/build.make:63: CMakeFiles/docking_controller.dir/src/controller.cpp.o] Interrupt
+make[2]: *** [CMakeFiles/docking_controller.dir/build.make:89: CMakeFiles/docking_controller.dir/src/queue_update_client.cpp.o] Interrupt
+make[1]: *** [CMakeFiles/Makefile2:80: CMakeFiles/docking_client.dir/all] Interrupt
+make[1]: *** [CMakeFiles/Makefile2:107: CMakeFiles/docking_controller.dir/all] Interrupt
+make: *** [Makefile:141: all] Interrupt

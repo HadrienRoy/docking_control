@@ -1,0 +1,13 @@
+[0.096s] Invoking command in '/home/ubuntu/colcon_ws/src/build/docking_controller': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ubuntu/colcon_ws/install/my_apriltag:/home/ubuntu/turtlebot3_ws/install/turtlebot3_teleop:/home/ubuntu/turtlebot3_ws/install/turtlebot3_example:/opt/ros/foxy /usr/bin/cmake --build /home/ubuntu/colcon_ws/src/build/docking_controller -- -j4 -l4
+[0.638s] [ 16%] [32mBuilding CXX object CMakeFiles/docking_client.dir/src/docking_client.cpp.o[0m
+[35.972s] [ 33%] [32m[1mLinking CXX executable docking_client[0m
+[38.683s] [ 33%] Built target docking_client
+[38.863s] [ 50%] [32mBuilding CXX object CMakeFiles/docking_controller.dir/src/controller.cpp.o[0m
+[45.613s] [01m[K/home/ubuntu/colcon_ws/src/my_docking_control/docking_controller/src/controller.cpp:[m[K In function ‘[01m[Kint main(int, char**)[m[K’:
+[45.613s] [01m[K/home/ubuntu/colcon_ws/src/my_docking_control/docking_controller/src/controller.cpp:304:5:[m[K [01;31m[Kerror: [m[K‘[01m[Kqueue_update_client[m[K’ was not declared in this scope
+[45.614s]   304 |     [01;31m[Kqueue_update_client[m[K("add_new_robot");
+[45.614s]       |     [01;31m[K^~~~~~~~~~~~~~~~~~~[m[K
+[54.264s] make[2]: *** [CMakeFiles/docking_controller.dir/build.make:63: CMakeFiles/docking_controller.dir/src/controller.cpp.o] Error 1
+[54.265s] make[1]: *** [CMakeFiles/Makefile2:107: CMakeFiles/docking_controller.dir/all] Error 2
+[54.266s] make: *** [Makefile:141: all] Error 2
+[54.272s] Invoked command in '/home/ubuntu/colcon_ws/src/build/docking_controller' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ubuntu/colcon_ws/install/my_apriltag:/home/ubuntu/turtlebot3_ws/install/turtlebot3_teleop:/home/ubuntu/turtlebot3_ws/install/turtlebot3_example:/opt/ros/foxy /usr/bin/cmake --build /home/ubuntu/colcon_ws/src/build/docking_controller -- -j4 -l4

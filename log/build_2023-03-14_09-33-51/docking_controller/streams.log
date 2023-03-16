@@ -1,0 +1,31 @@
+[0.079s] Invoking command in '/home/ubuntu/colcon_ws/src/build/docking_controller': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ubuntu/colcon_ws/install/my_apriltag:/home/ubuntu/turtlebot3_ws/install/turtlebot3_teleop:/home/ubuntu/turtlebot3_ws/install/turtlebot3_example:/opt/ros/foxy /usr/bin/cmake --build /home/ubuntu/colcon_ws/src/build/docking_controller -- -j4 -l4
+[0.308s] [35m[1mScanning dependencies of target docking_controller[0m
+[0.442s] [ 33%] Built target docking_client
+[0.556s] [ 50%] [32mBuilding CXX object CMakeFiles/docking_controller.dir/src/controller.cpp.o[0m
+[0.560s] [ 66%] [32mBuilding CXX object CMakeFiles/docking_controller.dir/src/docking_server.cpp.o[0m
+[0.562s] [ 83%] [32mBuilding CXX object CMakeFiles/docking_controller.dir/src/queue_update_client.cpp.o[0m
+[33.242s] [100%] [32m[1mLinking CXX executable docking_controller[0m
+[35.299s] [100%] Built target docking_controller
+[35.393s] Invoked command in '/home/ubuntu/colcon_ws/src/build/docking_controller' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ubuntu/colcon_ws/install/my_apriltag:/home/ubuntu/turtlebot3_ws/install/turtlebot3_teleop:/home/ubuntu/turtlebot3_ws/install/turtlebot3_example:/opt/ros/foxy /usr/bin/cmake --build /home/ubuntu/colcon_ws/src/build/docking_controller -- -j4 -l4
+[35.615s] Invoking command in '/home/ubuntu/colcon_ws/src/build/docking_controller': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ubuntu/colcon_ws/install/my_apriltag:/home/ubuntu/turtlebot3_ws/install/turtlebot3_teleop:/home/ubuntu/turtlebot3_ws/install/turtlebot3_example:/opt/ros/foxy /usr/bin/cmake --install /home/ubuntu/colcon_ws/src/build/docking_controller
+[35.652s] -- Install configuration: ""
+[35.653s] -- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/lib/docking_controller/docking_controller
+[35.674s] -- Set runtime path of "/home/ubuntu/colcon_ws/src/install/docking_controller/lib/docking_controller/docking_controller" to ""
+[35.674s] -- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/lib/docking_controller/docking_client
+[35.699s] -- Set runtime path of "/home/ubuntu/colcon_ws/src/install/docking_controller/lib/docking_controller/docking_client" to ""
+[35.700s] -- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/ament_index/resource_index/package_run_dependencies/docking_controller
+[35.703s] -- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/ament_index/resource_index/parent_prefix_path/docking_controller
+[35.705s] -- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/environment/ament_prefix_path.sh
+[35.707s] -- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/environment/ament_prefix_path.dsv
+[35.710s] -- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/environment/path.sh
+[35.712s] -- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/environment/path.dsv
+[35.714s] -- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/local_setup.bash
+[35.716s] -- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/local_setup.sh
+[35.718s] -- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/local_setup.zsh
+[35.719s] -- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/local_setup.dsv
+[35.721s] -- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/package.dsv
+[35.723s] -- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/ament_index/resource_index/packages/docking_controller
+[35.724s] -- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/cmake/docking_controllerConfig.cmake
+[35.726s] -- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/cmake/docking_controllerConfig-version.cmake
+[35.728s] -- Installing: /home/ubuntu/colcon_ws/src/install/docking_controller/share/docking_controller/package.xml
+[35.735s] Invoked command in '/home/ubuntu/colcon_ws/src/build/docking_controller' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ubuntu/colcon_ws/install/my_apriltag:/home/ubuntu/turtlebot3_ws/install/turtlebot3_teleop:/home/ubuntu/turtlebot3_ws/install/turtlebot3_example:/opt/ros/foxy /usr/bin/cmake --install /home/ubuntu/colcon_ws/src/build/docking_controller

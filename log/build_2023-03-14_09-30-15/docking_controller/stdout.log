@@ -1,0 +1,4 @@
+[ 16%] [32mBuilding CXX object CMakeFiles/docking_client.dir/src/docking_client.cpp.o[0m
+[ 33%] [32m[1mLinking CXX executable docking_client[0m
+[ 33%] Built target docking_client
+[ 50%] [32mBuilding CXX object CMakeFiles/docking_controller.dir/src/controller.cpp.o[0m
