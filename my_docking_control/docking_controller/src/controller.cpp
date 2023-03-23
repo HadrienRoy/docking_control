@@ -300,8 +300,6 @@ int main(int argc, char **argv)
 
     node->set_docking_state("");
 
-    node->queue_update_client("add_new_robot");
-
     while (rclcpp::ok())
     {
         node->run();

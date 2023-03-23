@@ -2,6 +2,7 @@
 #include <cmath>
 
 #include <docking_interfaces/msg/current_state.hpp>
+#include "docking_interfaces/msg/charging_queue.hpp"
 #include <docking_interfaces/srv/docking.hpp>
 #include <docking_interfaces/srv/start_april_tag_detection.hpp>
 
@@ -28,10 +29,13 @@ class DockingClient : public rclcpp::Node
             vel_subscriber = this->create_subscription<geometry_msgs::msg::Twist>(
                 "cmd_vel", 10, std::bind(&DockingClient::callbackVel, this, std::placeholders::_1)
             );
+            queue_subscriber = this->create_subscription<docking_interfaces::msg::ChargingQueue>(
+                "charging_queue", 10, std::bind(&DockingClient::callbackQueue, this, _1)
+            );
 
             // Every 50ms check to see if docking is required
             timer_ = this->create_wall_timer(
-                50ms, std::bind(&DockingClient::isDockingRequired, this)
+                5s, std::bind(&DockingClient::isDockingRequired, this)
             );
 
             RCLCPP_INFO(this->get_logger(), "Docking Client has been started.");
@@ -118,18 +122,22 @@ class DockingClient : public rclcpp::Node
         float min_percentage = 27; // 25%
         float min_voltage = 11.0;    // 11.0V
 
-        float percent_buffer = 10;        // 10%
-        float voltage_buffer = 0.1*1.5;   // 10% of 1.5V
+        float percent_buff = 10;        // 10%
+        float voltage_buff = 0.1*1.5;   // 10% of 1.5V
 
         bool odom_received = false;
         bool vel_received = true; // CHANGE: to false after testing
         bool battery_received = false;
+
+        int queue_size = 0;
 
         // Constants for % and V battery equations, y = mx+b
         const float percent_slope = -0.2648;
         const float voltage_slope = -0.0048;
         const float percent_intercept = 0.3467;     
         const float voltage_intercept = 0.0062;
+
+        const float percent_per_second = 0.0213;
 
         /*** INTERFACES ***/
         sensor_msgs::msg::BatteryState  last_battery_msg;
@@ -142,6 +150,8 @@ class DockingClient : public rclcpp::Node
         rclcpp::Subscription<sensor_msgs::msg::BatteryState>::SharedPtr battery_subscriber;
         rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr        odom_subscriber;
         rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr      vel_subscriber;
+        rclcpp::Subscription<docking_interfaces::msg::ChargingQueue>::SharedPtr queue_subscriber;
+        
 
         void callbackBattery(const sensor_msgs::msg::BatteryState::SharedPtr msg)
         {            
@@ -173,6 +183,11 @@ class DockingClient : public rclcpp::Node
             vel_received = true;
         }
 
+        void callbackQueue(const docking_interfaces::msg::ChargingQueue::SharedPtr msg)
+        {
+            queue_size = msg->size;
+        }
+
 
         /*** FUNCTIONS ***/
         void isDockingRequired()
@@ -186,13 +201,19 @@ class DockingClient : public rclcpp::Node
             float percent_per_meter = percent_slope*x_vel + percent_intercept;
             float voltage_per_meter = voltage_slope*x_vel + voltage_intercept;
 
+            float queue_buff = queue_size*60*percent_per_second; // Assuming 60s charge time and constant %/s dissipation
+            std::cout<<queue_buff;
+
+            float percent_needed_w_buff = current_percent - percent_buff - queue_buff - min_percentage;
+            float percent_current = current_distance * percent_per_meter;
+
             // Condition 1: Current Battery % - threshold > % left needed to dock
-            if ((current_percent - percent_buffer - min_percentage) < (current_distance * percent_per_meter))
+            if (percent_needed_w_buff < percent_current)
             {
                 docking_required = true;
             }
             // Condition 2: Current Battery V - threshold > V left needed to dock
-            else if ((current_voltage - voltage_buffer - min_voltage) < (current_distance * voltage_per_meter))
+            else if ((current_voltage - voltage_buff - min_voltage) < (current_distance * voltage_per_meter))
             {
                 docking_required = true;
             }
@@ -205,7 +226,7 @@ class DockingClient : public rclcpp::Node
             {
                 if (!stop_client)
                 {
-                    RCLCPP_INFO(this->get_logger(), "% - Buffer - Min: %f", current_percent - percent_buffer - min_percentage);
+                    RCLCPP_INFO(this->get_logger(), "% - Buffer - Min: %f", current_percent - percent_buff - min_percentage);
                     RCLCPP_INFO(this->get_logger(), "% To get back %f", current_distance * percent_per_meter);
 
                     RCLCPP_INFO(this->get_logger(), "Charging Required.");

@@ -10,6 +10,7 @@
 // #include "apriltag_msgs/msg/april_tag_detection_array.hpp"
 
 #include "docking_interfaces/msg/current_state.hpp"
+
 #include "docking_interfaces/srv/docking.hpp"
 #include "docking_interfaces/srv/gazebo_charge_battery.hpp"
 #include "docking_interfaces/srv/queue_update.hpp"
@@ -72,8 +73,7 @@ public:
         //     "detections", 10, std::bind(&DockingController::callbackTagPose, this, _1)
         // );
         odom_subscriber = this->create_subscription<nav_msgs::msg::Odometry>(
-            "odom", 10, std::bind(&DockingController::callbackOdom, this, _1)
-        );
+            "odom", 10, std::bind(&DockingController::callbackOdom, this, _1));
 
         tf_buffer = std::make_unique<tf2_ros::Buffer>(this->get_clock());
         tf_listener = std::make_shared<tf2_ros::TransformListener>(*tf_buffer);
@@ -135,7 +135,7 @@ private:
     /*** Declare Subscribers & Service Clients ***/
     rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr tag_pose_subscriber;
     rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_subscriber;
-
+    
     /*** TF2 ***/
     std::shared_ptr<tf2_ros::TransformListener> tf_listener{nullptr};
     std::unique_ptr<tf2_ros::Buffer> tf_buffer;
