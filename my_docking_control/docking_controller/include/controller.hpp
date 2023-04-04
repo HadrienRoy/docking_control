@@ -6,11 +6,9 @@
 #include "geometry_msgs/msg/transform_stamped.hpp"
 #include "geometry_msgs/msg/transform.hpp"
 
-// #include "apriltag_msgs/msg/april_tag_detection.hpp"
-// #include "apriltag_msgs/msg/april_tag_detection_array.hpp"
+#include "sensor_msgs/msg/battery_state.hpp"
 
 #include "docking_interfaces/msg/current_state.hpp"
-
 #include "docking_interfaces/srv/docking.hpp"
 #include "docking_interfaces/srv/gazebo_charge_battery.hpp"
 #include "docking_interfaces/srv/queue_update.hpp"
@@ -74,6 +72,9 @@ public:
         // );
         odom_subscriber = this->create_subscription<nav_msgs::msg::Odometry>(
             "odom", 10, std::bind(&DockingController::callbackOdom, this, _1));
+        battery_subscriber = this->create_subscription<sensor_msgs::msg::BatteryState>(
+            "battery_state", 10, std::bind(&DockingController::callbackBattery, this, _1));
+        
 
         tf_buffer = std::make_unique<tf2_ros::Buffer>(this->get_clock());
         tf_listener = std::make_shared<tf2_ros::TransformListener>(*tf_buffer);
@@ -92,6 +93,9 @@ public:
 private:
     rclcpp::TimerBase::SharedPtr tf_timer;
 
+    std::thread thread_queue;
+    std::vector<std::thread> threads;
+
     /*** Variables ***/
     std::string docking_state = "";
     std::string last_docking_state = "";
@@ -103,11 +107,13 @@ private:
     float turtle_x;
     float turtle_y;
     float turtle_theta;
+    float turtle_distance;
 
-    // Has tag been detected and information extracted
+    // Booleans
     bool ready_tag_pose = false;
     bool ready_turtle_pose = false;
     bool start_tag_detection = false;
+    bool battery_received = false;
 
     // Used for calculating turning angle
     double approach_angle;
@@ -121,6 +127,7 @@ private:
     double angle_tolerance;
 
     std::string robot_id;
+    float current_percent;
 
     // PID
     double kp = 0.5;
@@ -135,6 +142,7 @@ private:
     /*** Declare Subscribers & Service Clients ***/
     rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr tag_pose_subscriber;
     rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_subscriber;
+    rclcpp::Subscription<sensor_msgs::msg::BatteryState>::SharedPtr battery_subscriber;
     
     /*** TF2 ***/
     std::shared_ptr<tf2_ros::TransformListener> tf_listener{nullptr};
@@ -217,16 +225,22 @@ private:
         double roll, pitch, yaw;
         m.getRPY(roll, pitch, yaw);
 
-        // turtle_x = msg->pose.pose.position.x;
-        // turtle_y = msg->pose.pose.position.y;
-        // turtle_theta = yaw;
-
-        // TESTING
-        turtle_x = 0;
-        turtle_y = 0;
+        turtle_x = msg->pose.pose.position.x;
+        turtle_y = msg->pose.pose.position.y;
         turtle_theta = yaw;
 
+
+        turtle_y = 0;  // FOR TESTING, ODOM IS NOT WORKING
+        turtle_distance = sqrt((turtle_x*turtle_x) + (turtle_y*turtle_y));
+
         ready_turtle_pose = true;
+    }
+
+    void callbackBattery(const sensor_msgs::msg::BatteryState::SharedPtr msg)
+    {            
+        current_percent = msg->percentage;
+
+        battery_received = true;
     }
 
     void on_tf_timer()

@@ -34,14 +34,19 @@ void DockingController::start_state_func()
     // Stop Turtlebot
     turtlebot_stop();
 
-    // Call Queue Update Server to add new robot to queue 
-    // and get docking instructions
-    queue_update_client("add_new_robot");
+    if (ready_turtle_pose && battery_received)
+    {
+        // Call Queue Update Server to add new robot to queue 
+        // and get docking instructions
+        threads.push_back(std::thread(std::bind(&DockingController::queue_update_client, this, "add_new_robot")));
 
-    // After response is valid
-    // move to specified location
+        // After response is valid
+        // move to specified location
 
-    set_docking_state("searching");
+        set_docking_state("searching");
+        battery_received = false;
+    }
+   
 }
 
 void DockingController::searching_state_func()
