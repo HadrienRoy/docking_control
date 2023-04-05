@@ -12,6 +12,7 @@
 #include "docking_interfaces/srv/docking.hpp"
 #include "docking_interfaces/srv/gazebo_charge_battery.hpp"
 #include "docking_interfaces/srv/queue_update.hpp"
+#include "docking_interfaces/srv/state_update.hpp"
 
 #include "nav_msgs/msg/odometry.hpp"
 
@@ -63,8 +64,11 @@ public:
         /*** Define Publishers & Services ***/
         vel_publisher = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
         state_publisher = this->create_publisher<docking_interfaces::msg::CurrentState>("docking_controller/current_state", 10);
+        
         docking_service = this->create_service<docking_interfaces::srv::Docking>(
             "docking_controller/docking_service", std::bind(&DockingController::docking_server, this, _1, _2));
+        state_update_service = this->create_service<docking_interfaces::srv::StateUpdate>(
+            "docking_controller/state_update_service", std::bind(&DockingController::state_update_server, this, _1, _2));
 
         /*** Define Subscribers ***/
         // tag_pose_subscriber = this->create_subscription<geometry_msgs::msg::Pose>(
@@ -99,6 +103,8 @@ private:
     /*** Variables ***/
     std::string docking_state = "";
     std::string last_docking_state = "";
+
+    std::string queue_state;
 
     // Pose information
     double tag_x;
@@ -138,6 +144,7 @@ private:
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_publisher;
     rclcpp::Publisher<docking_interfaces::msg::CurrentState>::SharedPtr state_publisher;
     rclcpp::Service<docking_interfaces::srv::Docking>::SharedPtr docking_service;
+    rclcpp::Service<docking_interfaces::srv::StateUpdate>::SharedPtr state_update_service;
 
     /*** Declare Subscribers & Service Clients ***/
     rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr tag_pose_subscriber;
@@ -189,6 +196,10 @@ private:
     void docking_server(
         const std::shared_ptr<docking_interfaces::srv::Docking::Request> request,
         const std::shared_ptr<docking_interfaces::srv::Docking::Response> response);
+
+    void state_update_server(
+        const std::shared_ptr<docking_interfaces::srv::StateUpdate::Request> request,
+        const std::shared_ptr<docking_interfaces::srv::StateUpdate::Response> response);
 
     void queue_update_client(std::string type);
 
