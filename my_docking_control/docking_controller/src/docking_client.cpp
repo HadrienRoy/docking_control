@@ -131,6 +131,8 @@ class DockingClient : public rclcpp::Node
 
         int queue_size = 0;
 
+        int count = 0; // TESTING
+
         // Constants for % and V battery equations, y = mx+b
         const float percent_slope = -0.2648;
         const float voltage_slope = -0.0048;
@@ -204,10 +206,10 @@ class DockingClient : public rclcpp::Node
             std::cout << queue_buff;
 
             float percent_needed_w_buff = current_percent - percent_buff - queue_buff - min_percentage;
-            float percent_current = current_distance * percent_per_meter;
+            float percent_to_dock = current_distance * percent_per_meter;
 
             // Condition 1: Current Battery % - threshold > % left needed to dock
-            if (percent_needed_w_buff < percent_current)
+            if (percent_needed_w_buff < percent_to_dock)
             {
                 docking_required = true;
             }
@@ -216,9 +218,9 @@ class DockingClient : public rclcpp::Node
             {
                 docking_required = true;
             }
-
-            docking_required = true;
-
+            count++;
+            if (count == 10) {docking_required = true;}
+            // docking_required = true;
 
             // If docking requirement is met
             //      1. Start AprilTag Detection (service call)
