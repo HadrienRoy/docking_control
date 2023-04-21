@@ -57,8 +57,9 @@ public:
         this->declare_parameter<double>("angle_tolerance", 0.02);
         this->get_parameter("angle_tolerance", angle_tolerance);
 
-        this->declare_parameter<std::string>("robot_id", "0");
+        this->declare_parameter<std::string>("robot_id", "1");
         this->get_parameter("robot_id",robot_id);
+
 
         /*** Define Publishers & Services ***/
         vel_publisher = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
@@ -230,8 +231,10 @@ private:
         turtle_theta = yaw;
 
 
-        turtle_y = 0;  // FOR TESTING, ODOM IS NOT WORKING
+        // turtle_y = 0;  // FOR TESTING, ODOM IS NOT WORKING
         turtle_distance = sqrt((turtle_x*turtle_x) + (turtle_y*turtle_y));
+
+        RCLCPP_INFO_ONCE(get_logger(), "Distance: %0.2f", turtle_distance);
 
         ready_turtle_pose = true;
     }
@@ -245,36 +248,36 @@ private:
 
     void on_tf_timer()
     {
-        if (start_tag_detection)
-        {
-            geometry_msgs::msg::TransformStamped transformStamped;
+        // if (start_tag_detection)
+        // {
+        //     geometry_msgs::msg::TransformStamped transformStamped;
 
-            std::string fromFrameRel = "tag_36h11_00408";
-            std::string toFrameRel = "odom"; // was odom
-            try
-            {
-                transformStamped = tf_buffer->lookupTransform(
-                    toFrameRel, fromFrameRel,
-                    tf2::TimePointZero);
+        //     std::string fromFrameRel = "tag_36h11_00408";
+        //     std::string toFrameRel = "odom"; // was odom
+        //     try
+        //     {
+        //         transformStamped = tf_buffer->lookupTransform(
+        //             toFrameRel, fromFrameRel,
+        //             tf2::TimePointZero);
 
-                    tag_counter += 1;
-            }
-            catch (tf2::TransformException &ex)
-            {
-                RCLCPP_INFO(
-                    this->get_logger(), "Could not transform %s to %s: %s",
-                    toFrameRel.c_str(), fromFrameRel.c_str(), ex.what());
-                return;
-            }
+        //             tag_counter += 1;
+        //     }
+        //     catch (tf2::TransformException &ex)
+        //     {
+        //         RCLCPP_INFO(
+        //             this->get_logger(), "Could not transform %s to %s: %s",
+        //             toFrameRel.c_str(), fromFrameRel.c_str(), ex.what());
+        //         return;
+        //     }
 
-            tag_x = transformStamped.transform.translation.x;
-            tag_y = transformStamped.transform.translation.y;
+        //     tag_x = transformStamped.transform.translation.x;
+        //     tag_y = transformStamped.transform.translation.y;
 
-            // RCLCPP_INFO_ONCE(get_logger(),"tag_x timer position: %f", tag_x);
-            // RCLCPP_INFO_ONCE(get_logger(),"tag_y timer position: %f", tag_y);
+        //     // RCLCPP_INFO_ONCE(get_logger(),"tag_x timer position: %f", tag_x);
+        //     // RCLCPP_INFO_ONCE(get_logger(),"tag_y timer position: %f", tag_y);
             
-            ready_tag_pose = true;
-        }
+        //     ready_tag_pose = true;
+        // }
         
     }
 };

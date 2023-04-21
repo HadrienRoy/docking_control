@@ -30,7 +30,7 @@ class DockingClient : public rclcpp::Node
                 "cmd_vel", 10, std::bind(&DockingClient::callbackVel, this, std::placeholders::_1)
             );
             queue_subscriber = this->create_subscription<docking_interfaces::msg::ChargingQueue>(
-                "charging_queue", 10, std::bind(&DockingClient::callbackQueue, this, _1)
+                "/charging_queue", 10, std::bind(&DockingClient::callbackQueue, this, _1)
             );
 
             // Every 50ms check to see if docking is required
@@ -43,7 +43,7 @@ class DockingClient : public rclcpp::Node
 
         void callAprilTagDetectionService()
         {
-            auto client = this->create_client<docking_interfaces::srv::StartAprilTagDetection>("detect_apriltag_pupil/start_apriltag_detection");
+            auto client = this->create_client<docking_interfaces::srv::StartAprilTagDetection>("detect_tag_pupil/start_apriltag_detection");
             while (!client->wait_for_service(std::chrono::seconds(1)))
             {
                 RCLCPP_WARN(this->get_logger(), "Waiting for the apriltag detection server to be up...");

@@ -3,7 +3,7 @@
 void DockingController::queue_update_client(std::string type)
 {
     // Create client
-    auto client = this->create_client<docking_interfaces::srv::QueueUpdate>("scheduler/queue_update_service");
+    auto client = this->create_client<docking_interfaces::srv::QueueUpdate>("/scheduler/queue_update_service");
     while (!client->wait_for_service(std::chrono::seconds(1)))
     {
         RCLCPP_WARN(this->get_logger(), "Waiting for the Queue Update Server to be up...");

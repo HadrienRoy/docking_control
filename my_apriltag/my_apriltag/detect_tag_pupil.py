@@ -39,7 +39,7 @@ class DetectTagPupilNode(Node):
         self.counter = 0
 
         self.image_subscriber = self.create_subscription(
-            Image, "/camera/image_raw/uncompressed", self.callback_image, qos_profile_sensor_data)
+            Image, "camera/image_raw/uncompressed", self.callback_image, qos_profile_sensor_data)
 
         self.detections_publisher = self.create_publisher(
             Pose, "detections", 10)
@@ -47,7 +47,7 @@ class DetectTagPupilNode(Node):
         #     AprilTagDetection, "detections", 10)
 
         self.start_tag_detection_service = self.create_service(
-            StartAprilTagDetection, 'detect_apriltag_pupil/start_apriltag_detection', self.start_apriltag_detection_server)
+            StartAprilTagDetection, 'detect_tag_pupil/start_apriltag_detection', self.start_apriltag_detection_server)
 
         # Initialize the transform broadcaster
         # self.br = TransformBroadcaster(self)
