@@ -105,6 +105,7 @@ private:
     std::string last_docking_state = "";
 
     std::string queue_state;
+    int queue_num;
 
     // Pose information
     double tag_x;
@@ -131,8 +132,9 @@ private:
     double approach_distance_tolerance;
     double final_approach_distance_tolerance;
     double angle_tolerance;
-
     std::string robot_id;
+
+    // Battery
     float current_percent;
 
     // PID

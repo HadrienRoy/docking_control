@@ -159,7 +159,9 @@ void DockingController::docked_state_func()
 {
     turtlebot_stop();
 
-    gazebo_charge_battery_client();
+    // gazebo_charge_battery_client();
+
+    threads.push_back(std::thread(std::bind(&DockingController::queue_update_client, this, "state_change")));
 
     start_tag_detection = false;
 }

@@ -13,13 +13,15 @@ def generate_launch_description():
     detect_tag_pupil = Node(
         package="my_apriltag",
         executable="detect_tag_pupil",
-        name="detect_tag_pupil"
+        name="detect_tag_pupil",
+        # namespace="tb3_"+ROBOT_ID, # new
     )
 
     docking_controller = Node(
         package="docking_controller",
         executable="docking_controller",
         name="docking_controller",
+        # namespace="tb3_"+ROBOT_ID, # new
         parameters=[
             {"robot_id": ROBOT_ID},
         ]
@@ -28,7 +30,8 @@ def generate_launch_description():
     docking_client = Node(
         package="docking_controller",
         executable="docking_client",
-        name="docking_client"
+        name="docking_client",
+        # namespace="tb3_"+ROBOT_ID, # new
         # parameters=[
         #     {"start_docking_controller": False},
         # ]
