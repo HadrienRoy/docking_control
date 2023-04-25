@@ -48,7 +48,8 @@ add_executable( docking_controller
   src/controller.cpp 
   src/docking_server.cpp 
   src/queue_update_client.cpp
-  src/state_update_server.cpp)
+  src/state_update_server.cpp
+  src/rank_update_server.cpp)
 ament_target_dependencies( docking_controller ${DEPENDENCIES} )
 
 add_executable( docking_client src/docking_client.cpp )

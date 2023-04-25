@@ -9,10 +9,12 @@
 #include "sensor_msgs/msg/battery_state.hpp"
 
 #include "docking_interfaces/msg/current_state.hpp"
+#include "docking_interfaces/msg/charging_queue.hpp"
 #include "docking_interfaces/srv/docking.hpp"
 #include "docking_interfaces/srv/gazebo_charge_battery.hpp"
 #include "docking_interfaces/srv/queue_update.hpp"
 #include "docking_interfaces/srv/state_update.hpp"
+#include "docking_interfaces/srv/rank_update.hpp"
 
 #include "nav_msgs/msg/odometry.hpp"
 
@@ -58,7 +60,7 @@ public:
         this->declare_parameter<double>("angle_tolerance", 0.02);
         this->get_parameter("angle_tolerance", angle_tolerance);
 
-        this->declare_parameter<std::string>("robot_id", "1");
+        this->declare_parameter<std::string>("robot_id", "tb3_1");
         this->get_parameter("robot_id",robot_id);
 
 
@@ -70,7 +72,9 @@ public:
             "docking_controller/docking_service", std::bind(&DockingController::docking_server, this, _1, _2));
         state_update_service = this->create_service<docking_interfaces::srv::StateUpdate>(
             "docking_controller/state_update_service", std::bind(&DockingController::state_update_server, this, _1, _2));
-
+        rank_update_service = this->create_service<docking_interfaces::srv::RankUpdate>(
+            "docking_controller/rank_update_service", std::bind(&DockingController::rank_update_server, this, _1, _2));
+        
         /*** Define Subscribers ***/
         // tag_pose_subscriber = this->create_subscription<geometry_msgs::msg::Pose>(
         //     "detections", 10, std::bind(&DockingController::callbackTagPose, this, _1)
@@ -122,6 +126,8 @@ private:
     bool ready_turtle_pose = false;
     bool start_tag_detection = false;
     bool battery_received = false;
+    bool is_docking = false;
+
 
     // Used for calculating turning angle
     double approach_angle;
@@ -148,6 +154,7 @@ private:
     rclcpp::Publisher<docking_interfaces::msg::CurrentState>::SharedPtr state_publisher;
     rclcpp::Service<docking_interfaces::srv::Docking>::SharedPtr docking_service;
     rclcpp::Service<docking_interfaces::srv::StateUpdate>::SharedPtr state_update_service;
+    rclcpp::Service<docking_interfaces::srv::RankUpdate>::SharedPtr rank_update_service;
 
     /*** Declare Subscribers & Service Clients ***/
     rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr tag_pose_subscriber;
@@ -204,6 +211,10 @@ private:
         const std::shared_ptr<docking_interfaces::srv::StateUpdate::Request> request,
         const std::shared_ptr<docking_interfaces::srv::StateUpdate::Response> response);
 
+    void rank_update_server(
+        const std::shared_ptr<docking_interfaces::srv::RankUpdate::Request> request,
+        const std::shared_ptr<docking_interfaces::srv::RankUpdate::Response> response);
+
     void queue_update_client(std::string type);
 
     /*** Define Callback Functions ***/
@@ -258,6 +269,7 @@ private:
 
         battery_received = true;
     }
+
 
     void on_tf_timer()
     {

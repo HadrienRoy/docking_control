@@ -19,6 +19,10 @@ class DockingClient : public rclcpp::Node
     public:
         DockingClient() : Node("docking_client")
         {
+            this->declare_parameter<std::string>("robot_id", "tb3_1");
+            this->get_parameter("robot_id",robot_id);
+
+
             /*** SUBSCRIBERS DEFINITIONS***/
             battery_subscriber = this->create_subscription<sensor_msgs::msg::BatteryState>(
                 "battery_state", 10, std::bind(&DockingClient::callbackBattery, this, _1)
@@ -96,6 +100,9 @@ class DockingClient : public rclcpp::Node
 
         
     private:
+        // PARAMS
+        std::string robot_id;
+
         /*** VARIABLES ***/
         std::thread thread_dock;
         std::thread thread_tag;
@@ -130,6 +137,8 @@ class DockingClient : public rclcpp::Node
         bool battery_received = false;
 
         int queue_size = 0;
+
+        int charging_condition;
 
         int count = 0; // TESTING
 
@@ -203,7 +212,7 @@ class DockingClient : public rclcpp::Node
             float voltage_per_meter = voltage_slope*x_vel + voltage_intercept;
 
             float queue_buff = queue_size*60*percent_per_second; // Assuming 60s charge time and constant %/s dissipation
-            std::cout << queue_buff;
+            // std::cout << queue_buff;
 
             float percent_needed_w_buff = current_percent - percent_buff - queue_buff - min_percentage;
             float percent_to_dock = current_distance * percent_per_meter;
@@ -212,15 +221,21 @@ class DockingClient : public rclcpp::Node
             if (percent_needed_w_buff < percent_to_dock)
             {
                 docking_required = true;
+                charging_condition = 1;
             }
             // Condition 2: Current Battery V - threshold > V left needed to dock
-            else if ((current_voltage - voltage_buff - min_voltage) < (current_distance * voltage_per_meter))
-            {
-                docking_required = true;
-            }
-            count++;
-            if (count == 10) {docking_required = true;}
-            // docking_required = true;
+            // else if ((current_voltage - voltage_buff - min_voltage) < (current_distance * voltage_per_meter))
+            // {
+            //     docking_required = true;
+            //     RCLCPP_INFO(this->get_logger(), "Charging Required: Condition 2.");
+            // }
+            
+            // count++;
+            // if (count == 10) 
+            // {
+            //     docking_required = true; count = 0;
+            // }
+            
 
             // If docking requirement is met
             //      1. Start AprilTag Detection (service call)
@@ -229,7 +244,8 @@ class DockingClient : public rclcpp::Node
             {
                 if (!stop_client)
                 {
-                    RCLCPP_INFO(this->get_logger(), "Charging Required.");
+                    // RCLCPP_INFO(this->get_logger(), "Charging Required: Condition %s", charging_condition);
+                    // RCLCPP_INFO(this->get_logger(), "Percent w/ Buff: %f, Percent to dock: %f.", percent_needed_w_buff, percent_to_dock);
 
                     thread_tag = std::thread(std::bind(&DockingClient::callAprilTagDetectionService, this));
                     thread_dock = std::thread(std::bind(&DockingClient::callDockingService, this));

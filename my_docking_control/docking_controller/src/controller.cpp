@@ -45,6 +45,7 @@ void DockingController::start_state_func()
 
         set_docking_state("searching");
         battery_received = false;
+        is_docking = true; // used for priority rank update
     }
    
 }
@@ -164,6 +165,7 @@ void DockingController::docked_state_func()
     threads.push_back(std::thread(std::bind(&DockingController::queue_update_client, this, "state_change")));
 
     start_tag_detection = false;
+    is_docking = false; // used for priority rank update
 }
 
 /*** Calculation Functions ***/
