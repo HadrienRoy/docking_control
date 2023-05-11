@@ -121,16 +121,10 @@ class DockingClient : public rclcpp::Node
         bool docking_required = false;
 
         float max_distance_percentage = 216.2;   // 216.2m when comparing with %
-        float max_distance_voltage = 240.3;      // 240.3m when comparing with V
-
         float max_percentage = 100; // 100%
-        float max_voltage = 12.5;    // 12.5V
-
-        float min_percentage = 27; // 25%
-        float min_voltage = 11.0;    // 11.0V
-
-        float percent_buff = 10;        // 10%
-        float voltage_buff = 0.1*1.5;   // 10% of 1.5V
+        float min_percentage = 27;  // 25%
+        
+        float percent_buff = 10;    // 10%
 
         bool odom_received = false;
         bool vel_received = true; // CHANGE: to false after testing
@@ -144,10 +138,7 @@ class DockingClient : public rclcpp::Node
 
         // Constants for % and V battery equations, y = mx+b
         const float percent_slope = -0.2648;
-        const float voltage_slope = -0.0048;
-        const float percent_intercept = 0.3467;     
-        const float voltage_intercept = 0.0062;
-
+        const float percent_intercept = 0.4792;     
         const float percent_per_second = 0.0213;
 
         /*** INTERFACES ***/
@@ -208,8 +199,7 @@ class DockingClient : public rclcpp::Node
                 return;
             }
 
-            float percent_per_meter = percent_slope*x_vel + percent_intercept;
-            float voltage_per_meter = voltage_slope*x_vel + voltage_intercept;
+            float percent_per_meter = percent_slope*0.1+ percent_intercept;
 
             float queue_buff = queue_size*60*percent_per_second; // Assuming 60s charge time and constant %/s dissipation
             // std::cout << queue_buff;
@@ -223,12 +213,7 @@ class DockingClient : public rclcpp::Node
                 docking_required = true;
                 charging_condition = 1;
             }
-            // Condition 2: Current Battery V - threshold > V left needed to dock
-            // else if ((current_voltage - voltage_buff - min_voltage) < (current_distance * voltage_per_meter))
-            // {
-            //     docking_required = true;
-            //     RCLCPP_INFO(this->get_logger(), "Charging Required: Condition 2.");
-            // }
+            
             
             // count++;
             // if (count == 10) 
