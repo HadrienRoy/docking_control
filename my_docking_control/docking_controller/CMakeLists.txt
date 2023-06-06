@@ -44,16 +44,32 @@ set(DEPENDENCIES
   "rclcpp_action"
 )
 
+
+# Install Python modules
+ament_python_install_package(${PROJECT_NAME})
+
+install(PROGRAMS
+  scripts/nav_to_pose.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+
+
 add_executable( docking_controller 
   src/controller.cpp 
   src/docking_server.cpp 
   src/queue_update_client.cpp
   src/state_update_server.cpp
-  src/rank_update_server.cpp)
+  src/rank_update_server.cpp
+  src/nav_send_goal.cpp
+  )
 ament_target_dependencies( docking_controller ${DEPENDENCIES} )
 
 add_executable( docking_client src/docking_client.cpp )
 ament_target_dependencies( docking_client ${DEPENDENCIES} )
+
+# add_executable( nav_send_goal src/nav_send_goal.cpp )
+# ament_target_dependencies( nav_send_goal ${DEPENDENCIES} )
 
 # FOR TESTING
 # add_executable( record_data src/record_data.cpp )
@@ -62,6 +78,7 @@ ament_target_dependencies( docking_client ${DEPENDENCIES} )
 install(TARGETS
   docking_controller
   docking_client
+  # nav_send_goal
   # record_data # TEST
   DESTINATION lib/${PROJECT_NAME}
 )

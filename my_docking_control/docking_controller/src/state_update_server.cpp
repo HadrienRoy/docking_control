@@ -9,7 +9,7 @@ void DockingController::state_update_server(
 
     set_queue_info(request->queue_num, request->queue_state);
 
-    queue_state_received = true;
+    ready_queue_state = true;
 
 
     // RCLCPP_INFO(this->get_logger(), "Queue State: %s", queue_state.c_str());

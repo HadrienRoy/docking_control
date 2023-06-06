@@ -13,6 +13,8 @@ from re import M
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
+from rclpy.parameter import Parameter
+from rcl_interfaces.msg import SetParametersResult
 
 import cv2
 import numpy as np
@@ -25,6 +27,7 @@ from cv_bridge import CvBridge, CvBridgeError
 
 from geometry_msgs.msg import Pose
 from geometry_msgs.msg import TransformStamped
+from tf2_msgs.msg import TFMessage
 
 from docking_interfaces.srv import StartAprilTagDetection, Docking
 
@@ -36,11 +39,22 @@ class DetectTagPupilNode(Node):
     def __init__(self):
         super().__init__("detect_tag_pupil")
 
-        self.counter = 0
+        ### PARAMETERS ###
+        self.declare_parameter('robot_id', 'tb3_1')
+        self.robot_id = self.get_parameter('robot_id').value
+        self.add_on_set_parameters_callback(self.set_parameters_callback)
+        self.get_logger().info("New value set: %s" % self.robot_id)
 
+
+        ### SUBSCRIBERS ###
+        # /uncompressed not publishing in sim
+        # self.image_subscriber = self.create_subscription(
+        #     Image, "camera/image_raw/uncompressed", self.callback_image, qos_profile_sensor_data)
         self.image_subscriber = self.create_subscription(
-            Image, "camera/image_raw/uncompressed", self.callback_image, qos_profile_sensor_data)
+            Image, "camera/image_raw", self.callback_image, qos_profile_sensor_data)
 
+
+        ### PUBLISHERS and SERVICES ###
         self.detections_publisher = self.create_publisher(
             Pose, "detections", 10)
         # self.detections_publisher = self.create_publisher(
@@ -48,6 +62,11 @@ class DetectTagPupilNode(Node):
 
         self.start_tag_detection_service = self.create_service(
             StartAprilTagDetection, 'detect_tag_pupil/start_apriltag_detection', self.start_apriltag_detection_server)
+
+
+        ### VARIABLES ###
+
+        self.counter = 0
 
         # Initialize the transform broadcaster
         # self.br = TransformBroadcaster(self)
@@ -77,6 +96,13 @@ class DetectTagPupilNode(Node):
 
         self.get_logger().info("AprilTag Detection Node has been started.")
 
+    def parameter_callback(self, params):
+        for param in params:
+            if param.name == 'robot_id' and param.type == Parameter.Type.STRING:
+                self.robot_id = param.value
+        return SetParametersResult
+
+
     
     def start_apriltag_detection_server(self, request, response):
         if request.service == 'start':
@@ -89,33 +115,32 @@ class DetectTagPupilNode(Node):
     
     
     def callback_image(self, msg):
-        self.counter += 1
-        if self.counter % 25 == 0:
-            self.counter = 0
+        if (self.start_tag_detection):
+            self.counter += 1
+            if self.counter % 10 == 0:
+                self.counter = 0
 
-            try:
-                image = self.bridge.imgmsg_to_cv2(msg, "bgr8")
+                try:
+                    image = self.bridge.imgmsg_to_cv2(msg, "bgr8")
 
-            except Exception as e:
-                self.get_logger().error(e)
+                except Exception as e:
+                    self.get_logger().error(e)
 
-            # Load input image and convert to grayscale
-            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+                # Load input image and convert to grayscale
+                gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-            detections = self.detector.detect(
-                gray, estimate_tag_pose=True, camera_params=self.camera_params, tag_size=self.tag_size)
+                detections = self.detector.detect(
+                    gray, estimate_tag_pose=True, camera_params=self.camera_params, tag_size=self.tag_size)
 
-            #self.get_logger().info("AprilTag Detector created.")
-
-            # if detections not empty
-            if len(detections) >= 1:
-                self.publish_detections_data(detections)
+                # if detections not empty
+                if len(detections) >= 1:
+                    self.publish_detections_data(detections)
                 
 
     def publish_detections_data(self, detections):
         
         # for testing
-        # self.start_tag_detection = True 
+        self.start_tag_detection = True 
         # self.get_logger().info("AprilTag publish detection.")
         ####
 
@@ -179,6 +204,8 @@ class DetectTagPupilNode(Node):
 
             # corresponding tf variables
             t.header.stamp = self.get_clock().now().to_msg()
+            # t.header.frame_id = self.robot_id+'/camera_rgb_optical_frame'
+            # t.child_frame_id = self.robot_id+"/tag_36h11_00408"
             t.header.frame_id = 'camera_rgb_optical_frame'
             t.child_frame_id = "tag_36h11_00408"
 
@@ -194,6 +221,7 @@ class DetectTagPupilNode(Node):
 
             # Send the transformation
             self.br.sendTransform(t)
+
 
 
 def main(args=None):

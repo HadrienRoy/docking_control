@@ -1,8 +1,10 @@
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
+#include "rclcpp/time.hpp"
 
 #include "geometry_msgs/msg/twist.hpp"
 #include "geometry_msgs/msg/pose.hpp"
+#include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
 #include "geometry_msgs/msg/point.hpp"
 #include "geometry_msgs/msg/transform_stamped.hpp"
 #include "geometry_msgs/msg/transform.hpp"
@@ -20,6 +22,7 @@
 #include "nav_msgs/msg/odometry.hpp"
 
 #include "nav2_msgs/action/navigate_to_pose.hpp"
+#include "nav2_msgs/action/follow_waypoints.hpp"
 
 #include "tf2/LinearMath/Quaternion.h"
 #include "tf2/LinearMath/Matrix3x3.h"
@@ -36,6 +39,7 @@
 #include "unistd.h" // for sleep
 #include "math.h"
 #include "chrono"
+#include <vector>
 
 using std::placeholders::_1;
 using std::placeholders::_2;
@@ -49,6 +53,7 @@ class DockingController : public rclcpp::Node
 {
 public:
     using NavigateToPose = nav2_msgs::action::NavigateToPose;
+    using FollowWaypoints = nav2_msgs::action::FollowWaypoints;
     using GoalHandleNavigateToPose = rclcpp_action::ClientGoalHandle<NavigateToPose>;
     
     DockingController() : Node("docking_controller")
@@ -61,8 +66,8 @@ public:
         this->declare_parameter<double>("vel_angular", 0.2);
         this->get_parameter("vel_angular", vel_angular);
 
-        this->declare_parameter<double>("approach_distance_tolerance", 0.1);
-        this->get_parameter("approach_distance_tolerance", approach_distance_tolerance);
+        this->declare_parameter<double>("initial_approach_distance_tolerance", 0.4);
+        this->get_parameter("initial_approach_distance_tolerance", initial_approach_distance_tolerance);
 
         this->declare_parameter<double>("final_approach_distance_tolerance", 0.1);
         this->get_parameter("final_approach_distance_tolerance", final_approach_distance_tolerance);
@@ -73,11 +78,19 @@ public:
         this->declare_parameter<std::string>("robot_id", "tb3_1");
         this->get_parameter("robot_id",robot_id);
 
+        this->declare_parameter<float>("init_x_pose", 0.0);
+        this->get_parameter("init_x_pose", init_x_pose);
+
+        this->declare_parameter<float>("init_y_pose", 0.0);
+        this->get_parameter("init_y_pose", init_y_pose);
+
 
         /*** Define Publishers & Services ***/
         vel_publisher = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
         state_publisher = this->create_publisher<docking_interfaces::msg::CurrentState>("docking_controller/current_state", 10);
-        
+        // initial_amcl_pose_publisher = this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("initialpose", 10);
+
+
         docking_service = this->create_service<docking_interfaces::srv::Docking>(
             "docking_controller/docking_service", std::bind(&DockingController::docking_server, this, _1, _2));
         state_update_service = this->create_service<docking_interfaces::srv::StateUpdate>(
@@ -87,25 +100,17 @@ public:
         
         /*** Define Subscribers ***/
         // tag_pose_subscriber = this->create_subscription<geometry_msgs::msg::Pose>(
-        //     "detections", 10, std::bind(&DockingController::callbackTagPose, this, _1)
-        // );
+        //     "detections", 10, std::bind(&DockingController::callbackTagPose, this, _1));
         odom_subscriber = this->create_subscription<nav_msgs::msg::Odometry>(
             "odom", 10, std::bind(&DockingController::callbackOdom, this, _1));
         battery_subscriber = this->create_subscription<sensor_msgs::msg::BatteryState>(
             "battery_state", 10, std::bind(&DockingController::callbackBattery, this, _1));
-
-        // Navigation
-        nav_client = rclcpp_action::create_client<NavigateToPose>(this, "navigate_to_pose");
         
-
         tf_buffer = std::make_unique<tf2_ros::Buffer>(this->get_clock());
         tf_listener = std::make_shared<tf2_ros::TransformListener>(*tf_buffer);
 
-        // tf_timer = this->create_wall_timer(
-        //     1s, std::bind(&DockingController::on_tf_timer, this));
-
-       
-
+        tf_timer = this->create_wall_timer(
+            50ms, std::bind(&DockingController::on_tf_timer, this));
 
         RCLCPP_INFO(this->get_logger(), "Docking Controller has been started.");
         RCLCPP_INFO(this->get_logger(), "Robot ID: %s", robot_id.c_str());
@@ -133,22 +138,16 @@ private:
     float final_approach_time_sim_passed;
     float time_real_to_final_approach_goal = 5;
     
-
     steady_clock::time_point docked_time_start;
     float docked_time_passed;
     float time_to_charge = 60;
    
-    
     steady_clock::time_point queue_approach_time_start;
     float queue_approach_time_sim_passed; // simulated time of 1% drop per minute
     float time_real_to_queue_approach_goal;
     float percent_to_queue_approach_goal;
     float queue_approach_distance;
 
-
-
-
-    
 
     std::thread thread_queue;
     std::vector<std::thread> threads;
@@ -163,25 +162,45 @@ private:
     int last_queue_num = -1;
 
     // Pose information
-    double tag_x;
+    double tag_x;   // current tag pose
     double tag_y;
+    double tag_dist;
 
-    float turtle_x;
+    float turtle_x; // current robot pose
     float turtle_y;
+    float turtle_qw;
+    float turtle_qx;
+    float turtle_qy;
+    float turtle_qz;
     float turtle_theta;
     float turtle_distance;
 
+    float init_x_pose;  // for intitial amcl pose publiserh
+    float init_y_pose;
+
     // Booleans
-    bool ready_tag_pose = false;
-    bool ready_turtle_pose = false;
+    bool ready_tag_pose = false;        // Current tag pose ready
+    bool ready_turtle_pose = false;     // Current turtle pose ready
+    bool ready_battery_data = false;   // Current battery data ready
+
+    bool ready_queue_state = false; // Is first queue state ready
+   
+
     bool start_tag_detection = false;
-    bool battery_received = false;
     bool is_docking = false;
-    bool queue_state_received = false;
+    
     bool is_in_queue = false;
     bool first_approach = true;
     bool new_queue_num_rcv = false;
 
+    bool first_tag_pose = false;     // tag validation
+    bool valid_tag_pose = false;
+    bool next_tag_pose = true;
+
+    bool publish_initial_pose = true; // publish intial pose to amcl
+
+    bool call_send_goal = false; // goal bools
+    bool goal_reached = false;
 
     // Used for calculating turning angle
     double approach_angle;
@@ -190,7 +209,7 @@ private:
     // Param variables
     double vel_linear;
     double vel_angular;
-    double approach_distance_tolerance;
+    double initial_approach_distance_tolerance;
     double final_approach_distance_tolerance;
     double angle_tolerance;
     std::string robot_id;
@@ -207,6 +226,7 @@ private:
     /*** Declare Publishers & Services ***/
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_publisher;
     rclcpp::Publisher<docking_interfaces::msg::CurrentState>::SharedPtr state_publisher;
+    // rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initial_amcl_pose_publisher;
     rclcpp::Service<docking_interfaces::srv::Docking>::SharedPtr docking_service;
     rclcpp::Service<docking_interfaces::srv::StateUpdate>::SharedPtr state_update_service;
     rclcpp::Service<docking_interfaces::srv::RankUpdate>::SharedPtr rank_update_service;
@@ -223,7 +243,10 @@ private:
     /*** Declare Messages ***/
     geometry_msgs::msg::Twist vel_msg;
     geometry_msgs::msg::Pose last_pose;
-    geometry_msgs::msg::Pose approach_goal_pose;
+
+    geometry_msgs::msg::Pose initial_pose;
+    geometry_msgs::msg::Pose search_goal_pose;
+    geometry_msgs::msg::Pose initial_approach_goal_pose;
     geometry_msgs::msg::Pose final_approach_goal_pose;
 
     geometry_msgs::msg::Pose queue_goal_pose; // For queueing
@@ -246,7 +269,7 @@ private:
     // State Functions
     void start_state_func();
     void searching_state_func();
-    void approach_state_func();
+    void initial_approach_state_func();
     void final_approach_state_func();
     void docked_state_func();
     void queue_approach_state_func();
@@ -282,6 +305,8 @@ private:
     void queue_update_client(std::string type);
 
     /*** Define Callback Functions ***/
+
+    // not being used rn 
     void callbackTagPose(const geometry_msgs::msg::Pose::SharedPtr msg)
     {
         tf2::Quaternion q(
@@ -295,10 +320,22 @@ private:
         double roll, pitch, yaw;
         m.getRPY(roll, pitch, yaw);
 
-        // tag_x = msg->position.x;
-        // tag_y = msg->position.y;
+        // for testing
+        if (start_tag_detection)
+        {
+            // tag_counter += 1;
+            // if (tag_counter > 5)
+            // {
+            //     tag_counter = 0;
+            //     valid_tag_pose = true;
+            // }
+            // tag_x = msg->position.z;
+            tag_y = 0;
+            tag_dist = msg->position.z;
+        }
+        
 
-        ready_tag_pose = true;
+        // ready_tag_pose = true;
     }
 
     void callbackOdom(const nav_msgs::msg::Odometry::SharedPtr msg)
@@ -316,10 +353,14 @@ private:
 
         turtle_x = msg->pose.pose.position.x;
         turtle_y = msg->pose.pose.position.y;
+        turtle_qw = msg->pose.pose.orientation.w;
+        turtle_qx = msg->pose.pose.orientation.x;
+        turtle_qy = msg->pose.pose.orientation.y;
+        turtle_qz = msg->pose.pose.orientation.z;
+
         turtle_theta = yaw;
 
-
-        // turtle_y = 0;  // FOR TESTING, ODOM IS NOT WORKING
+        // turtle_y = 0;  // FOR LIVE TESTING, ODOM IS NOT WORKING
         turtle_distance = sqrt((turtle_x*turtle_x) + (turtle_y*turtle_y));
 
         // RCLCPP_INFO_ONCE(get_logger(), "Distance to origin: %0.2f", turtle_distance);
@@ -331,99 +372,105 @@ private:
     {            
         current_percent = msg->percentage;
 
-        battery_received = true;
+        ready_battery_data = true;
     }
 
     void on_tf_timer()
     {
-        // if (start_tag_detection)
-        // {
-        //     geometry_msgs::msg::TransformStamped transformStamped;
+        if (start_tag_detection)
+        {
+            geometry_msgs::msg::TransformStamped transformStamped;
 
-        //     std::string fromFrameRel = "tag_36h11_00408";
-        //     std::string toFrameRel = robot_id+"/odom"; // was odom
-        //     try
-        //     {
-        //         transformStamped = tf_buffer->lookupTransform(
-        //             toFrameRel, fromFrameRel,
-        //             tf2::TimePointZero);
-
-        //             tag_counter += 1;
-        //     }
-        //     catch (tf2::TransformException &ex)
-        //     {
-        //         RCLCPP_INFO(
-        //             this->get_logger(), "Could not transform %s to %s: %s",
-        //             toFrameRel.c_str(), fromFrameRel.c_str(), ex.what());
-        //         return;
-        //     }
-
-        //     tag_x = transformStamped.transform.translation.x;
-        //     tag_y = transformStamped.transform.translation.y;
-
-        //     // RCLCPP_INFO_ONCE(get_logger(),"tag_x timer position: %f", tag_x);
-        //     // RCLCPP_INFO_ONCE(get_logger(),"tag_y timer position: %f", tag_y);
-            
-        //     ready_tag_pose = true;
-        // }
+            std::string fromFrameRel = robot_id+"/tag_36h11_00408";
+            std::string toFrameRel = robot_id+"/map"; // was odom
         
+            try
+            {
+                transformStamped = tf_buffer->lookupTransform(
+                    toFrameRel, fromFrameRel, tf2::TimePointZero);
+            }
+            catch (tf2::TransformException &ex)
+            {
+                // RCLCPP_INFO(
+                    // this->get_logger(), "Could not transform %s to %s: %s",
+                    // toFrameRel.c_str(), fromFrameRel.c_str(), ex.what());
+                return;
+            }
+
+            // upon initial detection, start tag validity
+            if (first_tag_pose)
+            {
+                tag_counter += 1;
+            }
+
+            // tag_counter += 1;
+            if (first_tag_pose && tag_counter > 10)
+            {
+                tag_counter = 0;
+                valid_tag_pose = true;
+                first_tag_pose = false;
+
+                tag_x = transformStamped.transform.translation.x;
+                tag_y = transformStamped.transform.translation.y;
+                // RCLCPP_INFO(get_logger(), "transform available: %f", tag_x);
+            }
+
+            // For continuous tag if needed
+            // if (!next_tag_pose)
+            // {
+            //     tag_counter += 1;
+            //     if (tag_counter > 10)
+            //     {
+            //         tag_counter = 0;
+            //         next_tag_pose = true;
+
+            //         tag_x = transformStamped.transform.translation.x;
+            //         tag_y = transformStamped.transform.translation.y;
+            //         // RCLCPP_INFO(get_logger(), "transform available: %f", tag_x);
+            //     }
+            // }
+
+           
+            
+
+            // tag_x = transformStamped.transform.translation.x;
+            // tag_y = transformStamped.transform.translation.y;
+
+            
+            
+            ready_tag_pose = true;
+
+        }
     }
+
+
 
     /* Navigation2 Goal Functions */
-    
-    rclcpp_action::Client<NavigateToPose>::SharedPtr nav_client;
+    void send_goal(geometry_msgs::msg::Pose goal_pose, std::string command);
+    void navFeedbackCallback(GoalHandleNavigateToPose::SharedPtr,const std::shared_ptr<const NavigateToPose::Feedback> feedback);
+    void navResultCallback(const GoalHandleNavigateToPose::WrappedResult & result);
 
-    void sendGoal(geometry_msgs::msg::Pose goal_pose)
-    {
-        while (!this->nav_client->wait_for_action_server())
-        {
-            RCLCPP_INFO(get_logger(), "Waiting for action server...");
-        }
-
-        // Create goal
-        auto goal_msg = NavigateToPose::Goal();
-        goal_msg.pose.header.stamp = this->now();
-        goal_msg.pose.header.frame_id = "map";
-
-        goal_msg.pose.pose.position.x = goal_pose.position.x;
-        goal_msg.pose.pose.position.y = goal_pose.position.y;
-        goal_msg.pose.pose.orientation.x = goal_pose.orientation.x;
-        goal_msg.pose.pose.orientation.y = goal_pose.orientation.y;
-        goal_msg.pose.pose.orientation.w = goal_pose.orientation.w;
-        goal_msg.pose.pose.orientation.z = goal_pose.orientation.z;
-
-        // Create goal optinos
-        auto send_goal_options = rclcpp_action::Client<NavigateToPose>::SendGoalOptions();
-        send_goal_options.feedback_callback = std::bind(&DockingController::navFeedbackCallback, this, _1, _2);
-        send_goal_options.result_callback = std::bind(&DockingController::navResultCallback, this, _1);
+    // void publishInitialPose()
+    // {
+    //     geometry_msgs::msg::PoseWithCovarianceStamped initial_amcl_pose;
+    //     initial_amcl_pose.header.stamp = this->get_clock()->now();
+    //     initial_amcl_pose.header.frame_id = "map";
         
-        // Send goal
-        nav_client->async_send_goal(goal_msg, send_goal_options);
-    }
+    //     initial_amcl_pose.pose.pose.position.x = init_x_pose;
+    //     initial_amcl_pose.pose.pose.position.y = init_y_pose;
+    //     initial_amcl_pose.pose.pose.orientation.w = 1.0;
+        
+    //     std::array<double, 36> covariance= {0.25, 0, 0, 0, 0, 0, 
+    //                             0.25, 0, 0, 0, 0, 0,
+    //                             0,    0, 0, 0, 0, 0,
+    //                             0,    0, 0, 0, 0, 0,
+    //                             0,    0, 0, 0, 0, 0,
+    //                             0,    0, 0, 0, 0, 0.06853891945200942};
+    //     initial_amcl_pose.pose.covariance = covariance;
 
-    void navFeedbackCallback(GoalHandleNavigateToPose::SharedPtr,const std::shared_ptr<const NavigateToPose::Feedback> feedback)
-    {
-        RCLCPP_INFO(get_logger(), "Distance remaining = %f", feedback->distance_remaining);
-    }
-    
-    void navResultCallback(const GoalHandleNavigateToPose::WrappedResult & result)
-    {
-        switch (result.code) {
-        case rclcpp_action::ResultCode::SUCCEEDED:
-            RCLCPP_INFO(get_logger(), "Success!!!");
-            break;
-        case rclcpp_action::ResultCode::ABORTED:
-            RCLCPP_ERROR(get_logger(), "Goal was aborted");
-            return;
-        case rclcpp_action::ResultCode::CANCELED:
-            RCLCPP_ERROR(get_logger(), "Goal was canceled");
-            return;
-        default:
-            RCLCPP_ERROR(get_logger(), "Unknown result code");
-            return;
-        }
-  }
+    //     initial_amcl_pose_publisher->publish(initial_amcl_pose);
+    // }
 
-
+    void exit_dock();
 
 };
