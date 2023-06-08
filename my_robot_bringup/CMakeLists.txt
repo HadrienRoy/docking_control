@@ -13,9 +13,17 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 
+find_package(nav2_common)
+find_package(navigation2)
+find_package(rclcpp REQUIRED)
+nav2_package()
+
 install(DIRECTORY 
   launch
-  param
+  camera_info
+  params
+  maps
+  rviz
   DESTINATION share/${PROJECT_NAME}
 )
 

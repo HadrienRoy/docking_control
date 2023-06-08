@@ -34,7 +34,16 @@ def generate_launch_description():
     LDS_LAUNCH_FILE = '/hlds_laser.launch.py'
     ROBOT_ID = os.environ['ROBOT_ID']
 
-    # ROBOT_ID = os.environ['ROBOT_ID']
+    bringup_dir = get_package_share_directory('my_robot_bringup')
+    nav2_launch_dir = os.path.join(get_package_share_directory('nav2_bringup'), 'launch')
+    
+
+    params_file = os.path.join(bringup_dir, 'params', 'nav2_params.yaml')
+    use_nav2 = LaunchConfiguration('use_nav2', default='False')
+
+    map_dir = LaunchConfiguration(
+        'map',
+        default=os.path.join(bringup_dir, 'maps', "test_map.yaml"))
 
     usb_port = LaunchConfiguration('usb_port', default='/dev/ttyACM0')
 
@@ -42,7 +51,7 @@ def generate_launch_description():
         'tb3_param_dir',
         default=os.path.join(
             get_package_share_directory('my_robot_bringup'),
-            'param',
+            'params',
             TURTLEBOT3_MODEL + '.yaml'))
 
     if LDS_MODEL == 'LDS-01':
@@ -85,35 +94,55 @@ def generate_launch_description():
         DeclareLaunchArgument('launch_camera', default_value=camera_default,
                               description='Determines if raspberry pi camera is launched.'),
 
-        
+        DeclareLaunchArgument(
+            'map',
+            default_value=map_dir,
+            description='Full path to map file to load'),
+
 
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                [ThisLaunchFileDir(), '/turtlebot3_state_publisher.launch.py']),
-            launch_arguments={
-                'use_sim_time': use_sim_time,
-            }.items(),
+            PythonLaunchDescriptionSource([ThisLaunchFileDir(), '/turtlebot3_state_publisher.launch.py']),
+            launch_arguments={  'use_sim_time': use_sim_time,
+                                'namespace': ROBOT_ID,
+                                }.items(),
         ),
 
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [ThisLaunchFileDir(), '/rpicamera.launch.py']),
-                condition=IfCondition(launch_camera)
+            condition=IfCondition(launch_camera),
+            
         ),
 
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([lidar_pkg_dir, LDS_LAUNCH_FILE]),
-            launch_arguments={'port': '/dev/ttyUSB0', 'frame_id': 'base_scan'}.items(),
+            launch_arguments={'port': '/dev/ttyUSB0', 
+                'frame_id': 'base_scan', 
+                'namespace': ROBOT_ID
+            }.items(),
+            
         ),
 
         Node(
             package='turtlebot3_node',
             executable='turtlebot3_ros',
-            # name="tb3_"+ROBOT_ID,
             parameters=[tb3_param_dir],
             arguments=['-i', usb_port],
             output='screen',
-            namespace="tb3_"+ROBOT_ID # new
+            namespace=ROBOT_ID # new
             ),
-            
+
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(os.path.join(nav2_launch_dir, 'bringup_launch.py')),
+            condition=IfCondition(use_nav2),
+            launch_arguments={
+                'use_namespace': 'True',
+                'namespace': ROBOT_ID,
+                'map': map_dir,
+                'slam': 'False',
+                'use_sim_time': use_sim_time,
+                'autostart': 'False',
+                'params_file': params_file}.items()
+                ),
+    
     ])

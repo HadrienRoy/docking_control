@@ -14,7 +14,7 @@ def generate_launch_description():
         'camera_params',
         default=os.path.join(
             get_package_share_directory('my_robot_bringup'),
-            'param',
+            'params',
             'camera.yaml'))
 
     return LaunchDescription([
@@ -23,11 +23,12 @@ def generate_launch_description():
             package='usb_cam',
             executable='usb_cam_node_exe',
             parameters=[camera_params],
-            arguments=['--ros-args', '--remap', '__ns:=/camera'],
+            arguments=['--ros-args', '--remap', '__ns:=/'+ROBOT_ID+'/camera'],
             remappings=[
                 ('/camera/image_raw', '/camera/image_raw/uncompressed'),
                 
             ],
             output='screen',
+            namespace=ROBOT_ID
             ),
     ])
