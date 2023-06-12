@@ -1,0 +1,24 @@
+<?xml version='1.0'?>
+
+<sdf version='1.5'>
+  <model name='tag36_11_00408'>
+    <link name='main'>
+    <pose frame=''>0 0 0 0 0 0</pose>
+      <visual name='main_Visual'>
+        <geometry>
+          <box>
+            <size>0.3 0.3 0.01</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://tag36_11_00408/materials/scripts</uri>
+            <uri>model://tag36_11_00408/materials/textures/tag.png</uri>
+            <name>tag36_11_00408</name>
+          </script>
+        </material>
+      </visual>
+     </link>
+    <static>1</static>
+  </model>
+</sdf>

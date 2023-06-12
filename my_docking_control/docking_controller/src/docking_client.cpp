@@ -169,7 +169,7 @@ class DockingClient : public rclcpp::Node
             y_dist = msg->pose.pose.position.y;
 
             // FOR TESTING, ODOM IS NOT WORKING
-            y_dist = 0;
+            // y_dist = 0;
             current_distance = sqrt((x_dist*x_dist) + (y_dist*y_dist));
             
 

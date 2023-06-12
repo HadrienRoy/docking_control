@@ -18,6 +18,8 @@ set(msg_files
   "msg/ChargingQueue.msg"
   "msg/CurrentState.msg"
   "msg/StartDocking.msg"
+  "msg/AprilTagDetection.msg"
+  "msg/AprilTagDetectionArray.msg"
 )
 
 set(srv_files

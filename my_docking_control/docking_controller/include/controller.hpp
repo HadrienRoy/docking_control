@@ -112,6 +112,9 @@ public:
         tf_timer = this->create_wall_timer(
             50ms, std::bind(&DockingController::on_tf_timer, this));
 
+        // tf_2d_timer = this->create_wall_timer(
+        //     50ms, std::bind(&DockingController::on_tf_2d_timer, this));
+
         RCLCPP_INFO(this->get_logger(), "Docking Controller has been started.");
         RCLCPP_INFO(this->get_logger(), "Robot ID: %s", robot_id.c_str());
 
@@ -122,6 +125,8 @@ public:
 
 private:
     rclcpp::TimerBase::SharedPtr tf_timer;
+
+    rclcpp::TimerBase::SharedPtr tf_2d_timer;
 
     // float sim_time_dilation = 31.2237;
     float sim_time_dilation = 46.9484;
@@ -175,6 +180,11 @@ private:
     float turtle_theta;
     float turtle_distance;
 
+    float turtle_2d_x;
+    float turtle_2d_y;
+    float turtle_2d_theta;
+    float turtle_2d_distance;
+
     float init_x_pose;  // for intitial amcl pose publiserh
     float init_y_pose;
 
@@ -182,6 +192,8 @@ private:
     bool ready_tag_pose = false;        // Current tag pose ready
     bool ready_turtle_pose = false;     // Current turtle pose ready
     bool ready_battery_data = false;   // Current battery data ready
+
+    bool ready_2d_pose = false;
 
     bool ready_queue_state = false; // Is first queue state ready
    
@@ -275,6 +287,18 @@ private:
     void queue_approach_state_func();
     void in_queue_state_func();
 
+    void start_state_func_2d();
+    void searching_state_func_2d();
+    void initial_approach_state_func_2d();
+    void final_approach_state_func_2d();
+    void docked_state_func_2d();
+    void queue_approach_state_func_2d();
+    void in_queue_state_func_2d();
+    void docking_state_manager_2d();
+    void calculate_goal_2d(int queue_num);
+    double distance_2d(geometry_msgs::msg::Pose goal_pose);
+    double steering_angle_2d(geometry_msgs::msg::Pose goal_pose);
+
     // Calculations
     double distance(geometry_msgs::msg::Pose goal_pose);
     double linear_velocity(geometry_msgs::msg::Pose goal_pose);
@@ -363,7 +387,9 @@ private:
         // turtle_y = 0;  // FOR LIVE TESTING, ODOM IS NOT WORKING
         turtle_distance = sqrt((turtle_x*turtle_x) + (turtle_y*turtle_y));
 
-        // RCLCPP_INFO_ONCE(get_logger(), "Distance to origin: %0.2f", turtle_distance);
+        RCLCPP_INFO_ONCE(get_logger(), "Distance to origin: %0.2f", turtle_distance);
+        RCLCPP_INFO_ONCE(get_logger(), "turtle x: %0.2f", turtle_x);
+        RCLCPP_INFO_ONCE(get_logger(), "turtle y: %0.2f", turtle_y);
 
         ready_turtle_pose = true;
     }
@@ -430,9 +456,6 @@ private:
             //     }
             // }
 
-           
-            
-
             // tag_x = transformStamped.transform.translation.x;
             // tag_y = transformStamped.transform.translation.y;
 
@@ -441,6 +464,52 @@ private:
             ready_tag_pose = true;
 
         }
+    }
+
+    void on_tf_2d_timer()
+    {
+        geometry_msgs::msg::TransformStamped transformStamped;
+
+        std::string fromFrameRel = robot_id+"/base_link";
+        std::string toFrameRel = "map"; // was odom
+    
+        try
+        {
+            transformStamped = tf_buffer->lookupTransform(
+                toFrameRel, fromFrameRel, tf2::TimePointZero);
+        }
+        catch (tf2::TransformException &ex)
+        {
+            RCLCPP_INFO(
+                this->get_logger(), "Could not transform %s to %s: %s",
+                toFrameRel.c_str(), fromFrameRel.c_str(), ex.what());
+            return;
+        }
+
+        tf2::Quaternion q(
+            transformStamped.transform.rotation.x,
+            transformStamped.transform.rotation.y,
+            transformStamped.transform.rotation.z,
+            transformStamped.transform.rotation.w);
+
+        tf2::Matrix3x3 m(q);
+
+        double roll, pitch, yaw;
+        m.getRPY(roll, pitch, yaw);
+
+
+        turtle_2d_x = transformStamped.transform.translation.x;
+        turtle_2d_y = transformStamped.transform.translation.y;
+
+        turtle_2d_theta = yaw;
+
+        turtle_2d_distance = sqrt((turtle_2d_x*turtle_2d_x) + (turtle_2d_y*turtle_2d_y));
+
+        RCLCPP_INFO_ONCE(get_logger(), "Distance to origin: %0.2f", turtle_2d_distance);
+        RCLCPP_INFO_ONCE(get_logger(), "turtle 2d x: %0.2f", turtle_2d_x);
+        RCLCPP_INFO_ONCE(get_logger(), "turtle 2d y: %0.2f", turtle_2d_y);
+
+        ready_2d_pose = true;
     }
 
 

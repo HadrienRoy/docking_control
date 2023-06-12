@@ -121,9 +121,6 @@ void DockingController::searching_state_func()
         first_tag_pose  = true;
         return;
     }
-
-    // start_tag_detection = false; // turn off tag lookup
-    
     // If no queue number recieved then can't start next state
     if (!ready_queue_state)
     {
@@ -446,6 +443,457 @@ void DockingController::in_queue_state_func()
    ready_turtle_pose = false;
 }
 
+/*** 2d Docking State Functions ***/
+
+void DockingController::docking_state_manager_2d()
+{
+    if (docking_state == "")
+    {
+        turtlebot_turn_velocity(0.1);
+        set_docking_state("wait");
+    }
+
+    if (docking_state == "wait")
+    {
+        // do nothing
+    }
+
+    if (docking_state == "start")
+    {
+        start_state_func_2d();
+    }
+
+    if (docking_state == "searching")
+    {
+        searching_state_func_2d();
+    }
+
+    if (docking_state == "initial_approach")
+    {
+        initial_approach_state_func_2d();
+    }
+
+    if (docking_state == "final_approach")
+    {
+        final_approach_state_func_2d();
+    }
+
+    if (docking_state == "docked")
+    {
+        docked_state_func_2d();
+    }
+
+    if (docking_state == "queue_approach")
+    {
+        queue_approach_state_func_2d();
+    }
+
+    if (docking_state == "in_queue")
+    {
+        in_queue_state_func_2d();
+    }
+}
+
+void DockingController::start_state_func_2d()
+{
+    // Stop Turtlebot
+    turtlebot_stop();
+
+    if (ready_2d_pose && ready_battery_data)
+    {
+        // Call Queue Update Server to add new robot to queue/get dock commands
+        threads.push_back(std::thread(std::bind(&DockingController::queue_update_client, this, "add_new_robot")));
+
+        // After response is valid move to specified location
+
+        // Set initial pose to return to when charging finished
+        initial_pose.position.x = turtle_2d_x;
+        initial_pose.position.y = turtle_2d_y;
+        initial_pose.orientation.w = 0;
+        initial_pose.orientation.x = 0;
+        initial_pose.orientation.y = 0;
+        initial_pose.orientation.z = 1;
+
+        set_docking_state("searching");
+ 
+        call_send_goal = true; // make available for search goal or origin
+        
+
+        ready_2d_pose = false;
+        ready_battery_data = false;
+    }
+
+}
+
+void DockingController::searching_state_func_2d()
+{
+    // Get turtle pose
+    if (!ready_2d_pose)
+    {
+        // RCLCPP_INFO(get_logger(), "Turtle Pose not ready");
+        return;
+    }
+    else if (!ready_battery_data)
+    {
+        return;
+    }
+    // if (ready_battery_data_data && (current_percent < 27.00))
+    // {
+    //     RCLCPP_INFO_ONCE(get_logger(), "### BATTERY FAIL: %f ###", current_percent);
+    //     return;
+    // }
+
+
+    // send_goal(search_goal_pose, "cancel");
+    turtlebot_stop();
+
+    
+    // If no queue number recieved then can't start next state
+    if (!ready_queue_state)
+    {
+        return;
+    }
+
+    // Assign docking state depending on queue state
+    if (queue_state == "Docking")
+    {
+        is_docking = true;
+        set_docking_state("initial_approach");  // set next state
+        
+    }
+    else if (queue_state == "Queuing")
+    {
+        set_docking_state("queue_approach");    // set next state    
+                 
+    }
+
+    call_send_goal = true;
+    
+    ready_battery_data = false;
+    ready_queue_state = false;
+}
+
+void DockingController::initial_approach_state_func_2d()
+{
+    // Get turtle pose
+    if (!ready_2d_pose)
+    {
+        // RCLCPP_INFO(get_logger(), "Turtle Pose not ready");
+        return;
+    }
+    // else if (!ready_battery_data_data )
+    // {
+    //     return;
+    // }
+    // if (ready_battery_data && (current_percent < 27.00))
+    // {
+    //     RCLCPP_INFO_ONCE(get_logger(), "### BATTERY FAIL: %f ###", current_percent);
+    //     return;
+    // }
+    
+
+    // Go to initial approach goal
+    if (call_send_goal)
+    {
+        calculate_goal_2d(queue_num);
+        send_goal(initial_approach_goal_pose, "send");
+        call_send_goal = false;
+
+        // next_tag_pose = false;
+    }
+
+    // For continuous tag if needed
+    // if (next_tag_pose)
+    // {
+    //     calculate_goal(queue_num);
+    //     send_goal(initial_approach_goal_pose, "send");
+    //     next_tag_pose = false;
+    // }
+    
+    // If robot has reached initial approach goal
+    float distance_to_iap = distance_2d(initial_approach_goal_pose);
+    // RCLCPP_INFO(get_logger(), "Distance to IAPG %f ", distance_to_iap);
+
+    if (distance_to_iap < 0.25)
+    // if (goal_reached)
+    {
+        turtlebot_stop();
+        set_docking_state("final_approach");
+
+        // goal_reached = false;
+        // final_approach_time_start = steady_clock::now();    // start clock for final approach to be able to simulate time needed
+    }
+    
+    // Get current time passed
+    // steady_clock::time_point time_passed = steady_clock::now();
+    // approach_time_sim_passed = duration_cast<duration<float>>(time_passed - approach_time_start).count();
+    // RCLCPP_INFO_ONCE(get_logger(), "Approach Real Time Passed: %f", (approach_time_real_passed/sim_time_dilation));
+    // RCLCPP_INFO_ONCE(get_logger(), "Approach Percent Used: %f", (approach_time_real_passed/31.2237*0.032022));
+        
+    ready_2d_pose = false;
+    ready_battery_data = false;
+}
+
+void DockingController::final_approach_state_func_2d()
+{
+    // Get turtle pose
+    if (!ready_2d_pose)
+    {
+        // RCLCPP_INFO(get_logger(), "Turtle Pose not ready");
+        return;
+    }
+    // else if (!ready_battery_data )
+    // {
+    //     return;
+    // }
+    // if (ready_battery_data && (current_percent < 27.00))
+    // {
+    //     RCLCPP_INFO_ONCE(get_logger(), "### BATTERY FAIL: %f ###", current_percent);
+    //     return;
+    // }
+    
+
+    if (abs(steering_angle_2d(final_approach_goal_pose) - turtle_2d_theta) >= angle_tolerance)
+    {      
+        vel_msg.linear.x = 0;
+        vel_msg.angular.z = 1.0 * (steering_angle_2d(final_approach_goal_pose)-turtle_2d_theta);
+        vel_publisher->publish(vel_msg);
+    }
+    else
+    {   
+        float dist = distance_2d(final_approach_goal_pose);
+        if (dist >= 0.05)
+        {
+            vel_msg.linear.x = 0.1;
+            vel_msg.angular.z = 0;
+            vel_publisher->publish(vel_msg);
+        }
+        else
+        {
+            turtlebot_stop();
+            set_docking_state("docked");
+            docked_time_start = steady_clock::now();
+        }
+    }
+
+    // // Get current time passed
+    // steady_clock::time_point time_passed = steady_clock::now();
+    // final_approach_time_sim_passed = duration_cast<duration<float>>(time_passed - final_approach_time_start).count();
+
+    // // 31.2237 = time dilation
+    // if (final_approach_time_sim_passed >= time_real_to_final_approach_goal/sim_time_dilation)
+    // {
+    //     set_docking_state("docked");
+    //     docked_time_start = steady_clock::now();
+    // }
+
+ 
+    ready_2d_pose = false;
+    ready_battery_data = false;
+}
+
+void DockingController::docked_state_func_2d()
+{
+    turtlebot_stop();
+
+    if (is_docking)
+    {
+        threads.push_back(std::thread(std::bind(&DockingController::queue_update_client, this, "state_change")));
+        is_docking = false; 
+    }
+
+    // Get current time passed
+    steady_clock::time_point time_passed = steady_clock::now();
+    docked_time_passed = duration_cast<duration<float>>(time_passed - docked_time_start).count();
+    
+    // wait 60 second to account for charging time, 31.2237 = time dilation
+    if (docked_time_passed >= time_to_charge/sim_time_dilation)
+    {
+        // send state change to pop robot off queue
+        threads.push_back(std::thread(std::bind(&DockingController::queue_update_client, this, "state_change")));
+
+        set_docking_state("wait");
+
+        exit_dock(); // if charge is complete, go to original position
+    }
+}
+
+void DockingController::queue_approach_state_func_2d()
+{
+    // Get turtle pose
+    if (!ready_2d_pose)
+    {
+        // RCLCPP_INFO(get_logger(), "Turtle Pose not ready");
+        return;
+    }
+    // else if (!ready_battery_data )
+    // {
+    //     return;
+    // }
+    // if (ready_battery_data && (current_percent < 27.00))
+    // {
+    //     RCLCPP_INFO_ONCE(get_logger(), "### BATTERY FAIL: %f ###", current_percent);
+    //     return;
+    // }
+    
+    // Go to queue approach goal
+    if (call_send_goal)
+    {
+        calculate_goal_2d(queue_num);
+        send_goal(queue_goal_pose, "send");
+        call_send_goal = false;
+    }
+
+    // If robot has reached initial approach goal
+    float distance_to_qip = distance_2d(queue_goal_pose);
+    // RCLCPP_INFO_ONCE(get_logger(), "Distance to QiP: %f ", distance_to_qip);
+
+    if (distance_to_qip < 0.25)
+    {
+        turtlebot_stop();
+        set_docking_state("in_queue");
+
+        is_in_queue = true;
+    }
+
+    // Check if docking
+    if (queue_state == "Docking")
+    {
+        set_docking_state("initial_approach");  // set next state
+        // calculate_goal(queue_num);      // get approach goal
+        call_send_goal = true;
+    }
+    // else if (call_send_goal)
+    // {
+    //     calculate_goal(queue_num);
+    //     send_goal(queue_goal_pose, "send");
+    //     call_send_goal = false;
+    // }
+    else if (new_queue_num_rcv)
+    {
+        new_queue_num_rcv = false;      // get approach goal
+        call_send_goal = true;
+    }
+
+    ready_battery_data = false;
+    ready_2d_pose = false;
+}
+
+void DockingController::in_queue_state_func_2d()
+{
+    // Get turtle pose
+    if (!ready_2d_pose)
+    {
+        // RCLCPP_INFO(get_logger(), "Turtle Pose not ready");
+        return;
+    }
+    // else if (!ready_battery_data )
+    // {
+    //     return;
+    // }
+    // if (ready_battery_data && (current_percent < 27.00))
+    // {
+    //     RCLCPP_INFO_ONCE(get_logger(), "### BATTERY FAIL: %f ###", current_percent);
+    //     return;
+    // }
+    
+   
+    // Once arrived in queue, change state
+    if (is_in_queue)
+    {
+        threads.push_back(std::thread(std::bind(&DockingController::queue_update_client, this, "state_change")));
+        is_in_queue = false;
+    }
+
+
+    // Check if docking
+    if (queue_state == "Docking")
+    {
+        set_docking_state("initial_approach");  // set next state
+        // calculate_goal(queue_num);      // get approach goal
+        call_send_goal = true;
+    }
+    else if (call_send_goal)
+    {
+        calculate_goal_2d(queue_num);
+        send_goal(queue_goal_pose, "send");
+        call_send_goal = false;
+    }
+   
+    // If not docking check if change to new queu position
+    else if (new_queue_num_rcv)
+    {
+        new_queue_num_rcv = false;      // get approach goal
+        // calculate_goal(queue_num); 
+        call_send_goal = true;
+    }
+
+    
+   ready_battery_data = false;
+   ready_2d_pose = false;
+}
+
+void DockingController::calculate_goal_2d(int queue_num)
+{    
+    // If docking
+    if (queue_num == 0)
+    {
+        // initial_approach_goal_pose.position.x =  abs(turtle_2d_x) + 2.0;
+        // initial_approach_goal_pose.position.y =  abs(turtle_2d_y) + 0.0;
+
+        initial_approach_goal_pose.position.x = 2.0;
+        initial_approach_goal_pose.position.y = 0.0;
+        initial_approach_goal_pose.orientation.x = 0.0;
+        initial_approach_goal_pose.orientation.y = 0.0;
+        initial_approach_goal_pose.orientation.z = 0.0;
+        initial_approach_goal_pose.orientation.w = 1.0;
+
+        RCLCPP_INFO(get_logger(), "initial approach_goal x: %f", initial_approach_goal_pose.position.x);
+        RCLCPP_INFO(get_logger(), "initial approach_goal y: %f", initial_approach_goal_pose.position.y);
+
+        // final_approach_goal_pose.position.x =  abs(turtle_2d_x) + 2.5;
+        // final_approach_goal_pose.position.y =  abs(turtle_2d_y) + 0.0;
+
+        final_approach_goal_pose.position.x = 2.5;
+        final_approach_goal_pose.position.y = 0.0;
+        final_approach_goal_pose.orientation.x = 0.0;
+        final_approach_goal_pose.orientation.y = 0.0;
+        final_approach_goal_pose.orientation.z = 0.0;
+        final_approach_goal_pose.orientation.w = 1.0;
+
+        RCLCPP_INFO(get_logger(), "final_approach_goal x: %f", final_approach_goal_pose.position.x);
+        RCLCPP_INFO(get_logger(), "final_approach_goal y: %f", final_approach_goal_pose.position.y);
+
+    }
+    else // queueing or in queue
+    {
+        // queue_goal_pose.position.x =  abs(turtle_2d_y) + 2.0; 
+        // queue_goal_pose.position.y =  abs(turtle_2d_y) + (-2.0 * queue_num);
+
+        queue_goal_pose.position.x =  2.0; 
+        queue_goal_pose.position.y =  (-2.0 * queue_num);
+
+        RCLCPP_INFO(get_logger(), "queue_goal x: %f", queue_goal_pose.position.x);
+        RCLCPP_INFO(get_logger(), "queue_goal y: %f", queue_goal_pose.position.y);
+
+        // Calculate time needed to go to approach goal
+        queue_approach_distance = distance_2d(queue_goal_pose);       
+    }
+
+    // new_queue_num_rcv = true;
+    // last_queue_num = queue_num;
+}
+
+double DockingController::distance_2d(geometry_msgs::msg::Pose goal_pose)
+{
+    return sqrt(pow((goal_pose.position.x - turtle_2d_x), 2) +
+                pow((goal_pose.position.y - turtle_2d_y), 2));
+}
+
+double DockingController::steering_angle_2d(geometry_msgs::msg::Pose goal_pose)
+{
+    return atan2(goal_pose.position.y - turtle_2d_y, goal_pose.position.x - turtle_2d_x);
+}
 
 /*** Calculation Functions ***/
 double DockingController::distance(geometry_msgs::msg::Pose goal_pose)
@@ -704,6 +1152,7 @@ void DockingController::run()
 {
     // get_last_tag_pose();     // Get last pose of AprilTag
     docking_state_manager(); // Manage docking states
+    // docking_state_manager_2d(); // Manage docking states
     publish_state();         // Publish state to /current_state topic
 }
 

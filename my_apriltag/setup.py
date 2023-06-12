@@ -20,8 +20,6 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            "detect_tag = my_apriltag.detect_tag:main",
-            "detect_tag_swat = my_apriltag.detect_tag_swat:main",
             "detect_tag_pupil = my_apriltag.detect_tag_pupil:main"
         ],
     },
