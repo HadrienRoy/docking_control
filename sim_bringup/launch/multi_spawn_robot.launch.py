@@ -164,7 +164,7 @@ def generate_launch_description():
     ld.add_action(declare_tb3_3_params_file_cmd)
 
     # Add the actions to start gazebo, robots and simulations
-    # ld.add_action(start_gazebo_cmd)
+    ld.add_action(start_gazebo_cmd)
 
     for simulation_instance_cmd in nav_instances_cmds:
         ld.add_action(simulation_instance_cmd)

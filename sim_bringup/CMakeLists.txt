@@ -50,7 +50,7 @@ install(DIRECTORY
   models
   params
   rviz
-  simple_launch
+  launch_2d
   urdf
   worlds
   DESTINATION share/${PROJECT_NAME}
@@ -62,7 +62,7 @@ ament_python_install_package(${PROJECT_NAME})
 
 install(PROGRAMS
   # launch/spawn_robot.py
-  simple_launch/vel2joints.py
+  launch_2d/vel2joints.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

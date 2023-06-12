@@ -271,7 +271,7 @@ def generate_launch_description():
 
     # Add any actions
     ld.add_action(start_gazebo_server_cmd)
-    # ld.add_action(start_gazebo_client_cmd)
+    ld.add_action(start_gazebo_client_cmd)
     ld.add_action(start_gazebo_spawner_cmd) # premade node
     
     # Add actions to launch naviagation nodes

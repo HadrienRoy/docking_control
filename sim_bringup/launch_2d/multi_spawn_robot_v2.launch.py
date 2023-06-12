@@ -116,7 +116,7 @@ def generate_launch_description():
             
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(os.path.join(bringup_dir,
-                                                           'simple_launch',
+                                                           'launch_2d',
                                                            'spawn_robot_v2.launch.py')),
                 launch_arguments={'namespace': robot['name'],
                                   'use_namespace': 'True',
