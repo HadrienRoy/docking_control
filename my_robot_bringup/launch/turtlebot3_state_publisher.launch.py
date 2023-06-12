@@ -49,6 +49,12 @@ def generate_launch_description():
 
     # print (robot_desc) # Printing urdf information.
 
+    remappings = [
+                    ('/tf', 'tf'),
+                    ('/tf_static', 'tf_static'),
+                    ('map', '/map'), 
+                    ('/scan', 'scan')]
+
     return LaunchDescription([
         DeclareLaunchArgument(
             'use_sim_time',
@@ -59,6 +65,10 @@ def generate_launch_description():
             package='robot_state_publisher',
             executable='robot_state_publisher',
             output='screen',
-            parameters=[rsp_params, {'use_sim_time': use_sim_time}],
+            namespace=ROBOT_ID,
+            parameters=[rsp_params, {'use_sim_time': use_sim_time,
+                                    #  'frame_prefix': ROBOT_ID+ '/'
+                                     }],
+            remappings=remappings
             )
     ])
