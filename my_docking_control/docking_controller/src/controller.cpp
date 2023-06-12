@@ -1151,8 +1151,14 @@ void DockingController::gazebo_charge_battery_client()
 void DockingController::run()
 {
     // get_last_tag_pose();     // Get last pose of AprilTag
-    docking_state_manager(); // Manage docking states
-    // docking_state_manager_2d(); // Manage docking states
+    if (sim_2d)
+    {
+        docking_state_manager_2d(); // Manage docking states
+    }
+    else
+    {
+        docking_state_manager(); // Manage docking states
+    }
     publish_state();         // Publish state to /current_state topic
 }
 

@@ -84,6 +84,9 @@ public:
         this->declare_parameter<float>("init_y_pose", 0.0);
         this->get_parameter("init_y_pose", init_y_pose);
 
+        this->declare_parameter<bool>("sim_2d", false);
+        this->get_parameter("sim_2d",sim_2d);
+
 
         /*** Define Publishers & Services ***/
         vel_publisher = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
@@ -109,11 +112,17 @@ public:
         tf_buffer = std::make_unique<tf2_ros::Buffer>(this->get_clock());
         tf_listener = std::make_shared<tf2_ros::TransformListener>(*tf_buffer);
 
-        tf_timer = this->create_wall_timer(
-            50ms, std::bind(&DockingController::on_tf_timer, this));
 
-        // tf_2d_timer = this->create_wall_timer(
-        //     50ms, std::bind(&DockingController::on_tf_2d_timer, this));
+        if (sim_2d)
+        {
+            tf_2d_timer = this->create_wall_timer(
+            50ms, std::bind(&DockingController::on_tf_2d_timer, this));
+        }
+        else{
+            tf_timer = this->create_wall_timer(
+            50ms, std::bind(&DockingController::on_tf_timer, this));
+        }
+        
 
         RCLCPP_INFO(this->get_logger(), "Docking Controller has been started.");
         RCLCPP_INFO(this->get_logger(), "Robot ID: %s", robot_id.c_str());
@@ -194,6 +203,7 @@ private:
     bool ready_battery_data = false;   // Current battery data ready
 
     bool ready_2d_pose = false;
+    bool sim_2d = false;
 
     bool ready_queue_state = false; // Is first queue state ready
    

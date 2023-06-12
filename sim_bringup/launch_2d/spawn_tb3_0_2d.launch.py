@@ -38,19 +38,15 @@ def generate_launch_description():
     map_simulator_dir = get_package_share_directory('map_simulator')
 
     # Launch Configuration Variables
-  
-
     use_sim_time = True
-    namespace = 'tb3_2'
-
     autostart = True
 
-
-    robot_name = 'tb3_2'
-    robot_prefix = 'tb3_2/'
+    namespace = 'tb3_0'
+    robot_name = 'tb3_0'
+    robot_prefix = 'tb3_0/'
 
     pose = {'x_pose': -3.0,
-            'y_pose': 3.0,
+            'y_pose': 0.0,
             'z_pose': 0.0,
             'roll': 0.0,
             'pitch': 0.0,
@@ -62,9 +58,8 @@ def generate_launch_description():
                   ('map', '/map'), 
                   ('/scan', 'scan')]
 
-    # Declare launch arguments
     
-
+    
     params_file = os.path.join(bringup_dir, 'params', 'waffle_pi.yaml'),
    
     bt_xml_filename = os.path.join(
@@ -153,6 +148,7 @@ def generate_launch_description():
                      'final_approach_distance_tolerance': 0.2,
                      'init_x_pose': pose['x_pose'],
                      'init_y_pose': pose['y_pose'],
+                     'sim_2d': True
                      }])
 
     start_docking_client_cmd = Node(

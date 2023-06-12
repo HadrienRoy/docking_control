@@ -61,7 +61,7 @@ def generate_launch_description():
     elif LDS_MODEL == 'LDS-02':
         lidar_pkg_dir = LaunchConfiguration(
             'lidar_pkg_dir',
-            default=os.path.join(get_package_share_directory('my_ld08_driver'), 'launch'))
+            default=os.path.join(bringup_dir, 'launch'))
         LDS_LAUNCH_FILE = '/ld08.launch.py'
     else:
         lidar_pkg_dir = LaunchConfiguration(

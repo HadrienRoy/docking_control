@@ -19,8 +19,6 @@ from rcl_interfaces.msg import SetParametersResult
 import cv2
 import numpy as np
 import pupil_apriltags
-from my_robot_interfaces.msg import AprilTagDetection
-from my_robot_interfaces.msg import AprilTagDetectionArray
 
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError

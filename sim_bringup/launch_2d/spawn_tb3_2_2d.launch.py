@@ -41,16 +41,16 @@ def generate_launch_description():
   
 
     use_sim_time = True
-    namespace = 'tb3_1'
+    namespace = 'tb3_2'
 
     autostart = True
 
 
-    robot_name = 'tb3_1'
-    robot_prefix = 'tb3_1/'
+    robot_name = 'tb3_2'
+    robot_prefix = 'tb3_2/'
 
     pose = {'x_pose': -3.0,
-            'y_pose': -3.0,
+            'y_pose': 3.0,
             'z_pose': 0.0,
             'roll': 0.0,
             'pitch': 0.0,
@@ -153,6 +153,7 @@ def generate_launch_description():
                      'final_approach_distance_tolerance': 0.2,
                      'init_x_pose': pose['x_pose'],
                      'init_y_pose': pose['y_pose'],
+                     'sim_2d': True
                      }])
 
     start_docking_client_cmd = Node(

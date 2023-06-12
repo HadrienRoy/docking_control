@@ -14,6 +14,8 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
+find_package(geometry_msgs REQUIRED)
+
 set(msg_files
   "msg/ChargingQueue.msg"
   "msg/CurrentState.msg"
@@ -34,6 +36,8 @@ set(srv_files
 rosidl_generate_interfaces(${PROJECT_NAME}
   ${msg_files}
   ${srv_files}
+
+  DEPENDENCIES geometry_msgs std_msgs
 )
 
 ament_package()
