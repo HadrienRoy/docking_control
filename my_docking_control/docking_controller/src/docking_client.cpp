@@ -23,6 +23,17 @@ class DockingClient : public rclcpp::Node
             this->get_parameter("robot_id",robot_id);
 
 
+            // For testing
+            this->declare_parameter<float>("init_x_pose", 0.0);
+            this->get_parameter("init_x_pose", init_x_pose);
+
+            this->declare_parameter<float>("init_y_pose", 0.0);
+            this->get_parameter("init_y_pose", init_y_pose);
+
+            this->declare_parameter<bool>("sim_2d", false);
+            this->get_parameter("sim_2d",sim_2d);
+
+
             /*** SUBSCRIBERS DEFINITIONS***/
             battery_subscriber = this->create_subscription<sensor_msgs::msg::BatteryState>(
                 "battery_state", 10, std::bind(&DockingClient::callbackBattery, this, _1)
@@ -34,7 +45,7 @@ class DockingClient : public rclcpp::Node
                 "cmd_vel", 10, std::bind(&DockingClient::callbackVel, this, std::placeholders::_1)
             );
             queue_subscriber = this->create_subscription<docking_interfaces::msg::ChargingQueue>(
-                "/charging_queue", 10, std::bind(&DockingClient::callbackQueue, this, _1)
+                "/charging_queue_size", 10, std::bind(&DockingClient::callbackQueue, this, _1)
             );
 
             // Every 50ms check to see if docking is required
@@ -120,11 +131,12 @@ class DockingClient : public rclcpp::Node
         bool stop_client = false;       // docking requirement function bools
         bool docking_required = false;
 
-        float max_distance_percentage = 216.2;   // 216.2m when comparing with %
+        float max_distance = 216;   // max distant the robot can physically travel until shutdown
         float max_percentage = 100; // 100%
         float min_percentage = 27;  // 25%
         
-        float percent_buff = 10;    // 10%
+        float percent_buff = 7.5;    // 10%
+        float distance_buff = max_distance/10;
 
         bool odom_received = false;
         bool vel_received = true; // CHANGE: to false after testing
@@ -132,9 +144,14 @@ class DockingClient : public rclcpp::Node
 
         int queue_size = 0;
 
+        int t_charge = 60;
+
         int charging_condition;
 
         int count = 0; // TESTING
+        bool sim_2d = false;
+        float init_x_pose;
+        float init_y_pose;
 
         // Constants for % and V battery equations, y = mx+b
         const float percent_slope = -0.2648;
@@ -170,7 +187,16 @@ class DockingClient : public rclcpp::Node
 
             // FOR TESTING, ODOM IS NOT WORKING
             // y_dist = 0;
-            current_distance = sqrt((x_dist*x_dist) + (y_dist*y_dist));
+            // current_distance = sqrt((x_dist*x_dist) + (y_dist*y_dist));
+
+            if (sim_2d)
+            {
+                current_distance = sqrt((init_x_pose*init_x_pose) + (init_y_pose*init_y_pose));
+            }
+            else
+            {
+                current_distance = sqrt((x_dist*x_dist) + (y_dist*y_dist));
+            }
             
 
             odom_received = true;
@@ -201,26 +227,23 @@ class DockingClient : public rclcpp::Node
 
             float percent_per_meter = percent_slope*0.1+ percent_intercept;
 
-            float queue_buff = queue_size*60*percent_per_second; // Assuming 60s charge time and constant %/s dissipation
+            float queue_buff = queue_size*t_charge*percent_per_second; // Assuming 60s charge time and constant %/s dissipation
             // std::cout << queue_buff;
 
-            float percent_needed_w_buff = current_percent - percent_buff - queue_buff - min_percentage;
+            float percent_req = current_percent - percent_buff - queue_buff - min_percentage;
             float percent_to_dock = current_distance * percent_per_meter;
 
             // Condition 1: Current Battery % - threshold > % left needed to dock
-            if (percent_needed_w_buff < percent_to_dock)
+            if (percent_req < percent_to_dock)
             {
                 docking_required = true;
                 charging_condition = 1;
             }
-            
-            
-            // count++;
-            // if (count == 10) 
-            // {
-            //     docking_required = true; count = 0;
-            // }
-            
+            else if((current_distance - distance_buff) > (max_distance/2))
+            {
+                docking_required = true;
+                charging_condition = 2;
+            }
 
             // If docking requirement is met
             //      1. Start AprilTag Detection (service call)

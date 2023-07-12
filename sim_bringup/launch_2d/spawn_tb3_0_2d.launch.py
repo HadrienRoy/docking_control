@@ -1,20 +1,4 @@
 #!/usr/bin/env python3
-#
-# Copyright 2019 ROBOTIS CO., LTD.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-# Authors: Darby Lim
 
 import os
 
@@ -33,9 +17,6 @@ def generate_launch_description():
     TURTLEBOT3_MODEL = os.environ['TURTLEBOT3_MODEL']
 
     bringup_dir = get_package_share_directory('sim_bringup')
-    launch_dir = os.path.join(bringup_dir, 'launch')
-    nav2_launch_dir = os.path.join(get_package_share_directory('nav2_bringup'), 'launch')
-    map_simulator_dir = get_package_share_directory('map_simulator')
 
     # Launch Configuration Variables
     use_sim_time = True
@@ -53,12 +34,8 @@ def generate_launch_description():
             'yaw': 0.0}
     
     remappings = [
-        # ('/tf', 'tf'),
-        #           ('/tf_static', 'tf_static'),
                   ('map', '/map'), 
                   ('/scan', 'scan')]
-
-    
     
     params_file = os.path.join(bringup_dir, 'params', 'waffle_pi.yaml'),
    
@@ -156,7 +133,10 @@ def generate_launch_description():
         executable="docking_client",
         name="docking_client",
         namespace=namespace,
-        parameters=[{'robot_id': robot_name}])
+        parameters=[{'robot_id': robot_name,
+                    'init_x_pose': pose['x_pose'],
+                     'init_y_pose': pose['y_pose'],
+                     'sim_2d': True}])
     ###########################################################################
 
     # Start nav2 pkg
@@ -225,8 +205,6 @@ def generate_launch_description():
                             {'autostart': autostart},
                             {'node_names': lifecycle_nodes}]
                 )
-
-        
     ])
     
 

@@ -57,30 +57,15 @@ install(DIRECTORY
 )
 
 
-# Install Python modules
-ament_python_install_package(${PROJECT_NAME})
-
-install(PROGRAMS
-  # launch/spawn_robot.py
-  launch_2d/vel2joints.py
-  DESTINATION lib/${PROJECT_NAME}
-)
-
 # Install C++ modules
 add_executable( gazebo_battery_state launch/gazebo_battery_state.cpp )
 ament_target_dependencies( gazebo_battery_state ${DEPENDENCIES} )
 
-add_executable( init_pose_publisher launch/init_pose_publisher.cpp )
-ament_target_dependencies( init_pose_publisher ${DEPENDENCIES} )
 
 install(TARGETS
   gazebo_battery_state
-  init_pose_publisher
   DESTINATION lib/${PROJECT_NAME}
 )
-
-
-
 
 ament_export_include_directories(include)
 ament_export_dependencies(gazebo_ros_pkgs)

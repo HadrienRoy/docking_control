@@ -90,7 +90,7 @@ public:
 
         /*** Define Publishers & Services ***/
         vel_publisher = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
-        state_publisher = this->create_publisher<docking_interfaces::msg::CurrentState>("docking_controller/current_state", 10);
+        state_publisher = this->create_publisher<docking_interfaces::msg::CurrentState>("current_state", 10);
         // initial_amcl_pose_publisher = this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("initialpose", 10);
 
 
@@ -161,6 +161,10 @@ private:
     float time_real_to_queue_approach_goal;
     float percent_to_queue_approach_goal;
     float queue_approach_distance;
+
+    steady_clock::time_point total_time_start;
+    float total_time_passed;
+
 
 
     std::thread thread_queue;

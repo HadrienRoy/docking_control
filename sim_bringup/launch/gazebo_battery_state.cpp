@@ -1,5 +1,4 @@
 #include "rclcpp/rclcpp.hpp"
-
 #include "sensor_msgs/msg/battery_state.hpp"
 
 using std::placeholders::_1;

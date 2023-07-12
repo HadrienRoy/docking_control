@@ -69,11 +69,8 @@ void DockingController::exit_dock()
     geometry_msgs::msg::PoseStamped post_dock_1;
     post_dock_1.header.stamp = this->now();
     post_dock_1.header.frame_id = "map";
-    post_dock_1.pose.position.x = 2.5;
+    post_dock_1.pose.position.x = 2;
     post_dock_1.pose.position.y = 2;
-    // post_dock_1.pose.pose.orientation.x = goal_pose.orientation.x;
-    // post_dock_1.pose.pose.orientation.y = goal_pose.orientation.y;
-    // post_dock_1.pose.pose.orientation.w = goal_pose.orientation.w;
     post_dock_1.pose.orientation.z = 1;
 
     geometry_msgs::msg::PoseStamped post_dock_2;

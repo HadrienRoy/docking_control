@@ -13,8 +13,17 @@ void DockingController::queue_update_client(std::string type)
     auto request = std::make_shared<docking_interfaces::srv::QueueUpdate::Request>();
     request->type = type;
     request->id = robot_id;
-    request->distance = turtle_distance;
+    // request->distance = turtle_distance;
     request->battery = current_percent; 
+
+    if (sim_2d)
+    {
+        request->distance = turtle_2d_distance;
+    }
+    else
+    {
+        request->distance = turtle_distance;
+    }
 
     auto future = client->async_send_request(request);
 
